@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="300mm"
+   height="200mm"
+   viewBox="0 0 300 200"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="SoulCockpit_WebCard_Seite2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showguides="true"
+     inkscape:zoom="0.7349537"
+     inkscape:cx="492.54803"
+     inkscape:cy="354.4441"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="3832"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showgrid="false">
+    <inkscape:grid
+       id="grid38"
+       units="mm"
+       originx="0"
+       originy="0"
+       spacingx="0.99999995"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       enabled="true"
+       visible="false" />
+    <sodipodi:guide
+       position="150.12,153.92"
+       orientation="1,0"
+       id="guide7"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <rect
+       x="-90.919456"
+       y="-16.355881"
+       width="40.408646"
+       height="29.82543"
+       id="rect8" />
+  </defs>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ed7d31;fill-opacity:1;stroke:none;stroke-width:1.05818"
+       id="rect4"
+       width="299.95999"
+       height="23.128448"
+       x="0.011964309"
+       y="0.026616763" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.6389px;font-family:Calibri;-inkscape-font-specification:'Calibri Italic';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="149.56937"
+       y="17.738335"
+       id="text7"><tspan
+         id="tspan7"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.6389px;font-family:Calibri;-inkscape-font-specification:'Calibri Italic';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         x="149.56937"
+         y="17.738335"
+         sodipodi:role="line">Vollkommenheit</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text8"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Calibri;-inkscape-font-specification:Calibri;text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect8);display:inline;fill:#ffffff;fill-opacity:1;stroke:none" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:Calibri;-inkscape-font-specification:'Calibri Italic';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;white-space:pre;inline-size:0;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="81.79528"
+       y="37.366611"
+       id="text7-1-6-3-9-4-5-4-9-2-0"
+       transform="translate(67.9803,33.251279)"><tspan
+         sodipodi:role="line"
+         id="tspan46"
+         x="81.79528"
+         y="37.366611">Eines Tages, so glaube ich, werden wir alle mit</tspan><tspan
+         sodipodi:role="line"
+         x="81.79528"
+         y="50.595737"
+         id="tspan47">tiefer Freude und Gelassenheit erkennen, dass wir dort,</tspan><tspan
+         sodipodi:role="line"
+         x="81.79528"
+         y="63.82486"
+         id="tspan48">wo wir immer ankommen wollten, schon immer waren;</tspan><tspan
+         sodipodi:role="line"
+         x="81.79528"
+         y="77.053986"
+         id="tspan49">und wir werden einsehen, dass das, was wir die ganze</tspan><tspan
+         sodipodi:role="line"
+         x="81.79528"
+         y="90.283112"
+         id="tspan51">Zeit suchten, schon immer in uns war.</tspan></text>
+  </g>
+</svg>
