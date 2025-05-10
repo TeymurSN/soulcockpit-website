@@ -1,90 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soul Cockpit</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #f4f4f4;
-      text-align: center;
-    }
-    .slideshow {
-      position: relative;
-      max-width: 800px;
-      margin: 50px auto;
-    }
-    .slideshow img {
-      width: 100%;
-      height: auto;
-      display: none;
-    }
-    .slideshow img.active {
-      display: block;
-    }
-    .nav-button {
-      cursor: pointer;
-      font-size: 2em;
-      padding: 0.2em 0.5em;
-      margin: 1em;
-      background: none;
-      border: none;
-    }
-    footer {
-      margin-top: 50px;
-      padding: 20px;
-      background: #222;
-      color: white;
-      font-size: 14px;
-    }
-    footer a {
-      color: #ddd;
-      text-decoration: none;
-      margin: 0 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Cockpit</title>
+    <style>
+        body {
+            background-color: white;
+            text-align: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-
-  <div class="slideshow">
-    <img src="images/bild1.svg" class="active" alt="Bild 1" />
-    <img src="images/bild2.svg" alt="Bild 2" />
-    <img src="images/bild3.svg" alt="Bild 3" />
-
-    <div>
-      <button class="nav-button" onclick="prevSlide()">&lt;</button>
-      <button class="nav-button" onclick="nextSlide()">&gt;</button>
-    </div>
-  </div>
-
-  <footer>
-    © 2025 Soul Cockpit |
-    <a href="impressum.html">Impressum</a> |
-    <a href="datenschutz.html">Datenschutz</a>
-  </footer>
-
-  <script>
-    const slides = document.querySelectorAll('.slideshow img');
-    let current = 0;
-
-    function showSlide(index) {
-      slides.forEach((img, i) => {
-        img.classList.toggle('active', i === index);
-      });
-    }
-
-    function nextSlide() {
-      current = (current + 1) % slides.length;
-      showSlide(current);
-    }
-
-    function prevSlide() {
-      current = (current - 1 + slides.length) % slides.length;
-      showSlide(current);
-    }
-  </script>
+    <img src="soulcockpit.png" alt="Soul Cockpit">
 </body>
 </html>
