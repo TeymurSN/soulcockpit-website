@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="Icon-512.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.72960859"
+     inkscape:cx="423.51475"
+     inkscape:cy="554.40685"
+     inkscape:window-width="1920"
+     inkscape:window-height="1021"
+     inkscape:window-x="-7"
+     inkscape:window-y="-7"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showguides="true">
+    <sodipodi:guide
+       position="192.1978,264.36264"
+       orientation="0,-1"
+       id="guide2"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.280001;stroke-linecap:round;stroke-opacity:1"
+       id="rect1"
+       width="135.46666"
+       height="135.46666"
+       x="24.2967"
+       y="93.92308" />
+    <rect
+       style="fill:#ed7d31;fill-opacity:1;stroke-width:0.215709;stroke-linecap:round"
+       id="rect2"
+       width="135.46666"
+       height="26.472525"
+       x="24.296703"
+       y="93.923073" />
+    <rect
+       style="fill:#ed7d31;fill-opacity:1;stroke-width:0.0392664;stroke-linecap:round"
+       id="rect2-5"
+       width="17.246878"
+       height="6.8901072"
+       x="23.940569"
+       y="170.3362" />
+    <rect
+       style="fill:#ed7d31;fill-opacity:1;stroke-width:0.0392664;stroke-linecap:round"
+       id="rect2-5-1"
+       width="17.246878"
+       height="6.8901072"
+       x="142.32645"
+       y="170.34952" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.1111px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.280001;stroke-linecap:round;stroke-opacity:1"
+       x="92.472527"
+       y="110.96703"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.1111px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.28;stroke-opacity:1"
+         x="92.472527"
+         y="110.96703">Soul Cockpit</tspan></text>
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:#ed7d31;stroke-width:1.12536;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+       id="path2"
+       cx="92.466591"
+       cy="174.05998"
+       r="41.937321" />
+    <circle
+       style="fill:#ebf1de;fill-opacity:1;stroke:none;stroke-width:1.08679;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+       id="path2-8"
+       cx="92.449379"
+       cy="174.04398"
+       r="40.5" />
+  </g>
+</svg>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="Icon-32.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.4592172"
+     inkscape:cx="97.312449"
+     inkscape:cy="495.81378"
+     inkscape:window-width="1920"
+     inkscape:window-height="1021"
+     inkscape:window-x="-7"
+     inkscape:window-y="-7"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     showgrid="false">
+    <sodipodi:guide
+       position="192.1978,264.36264"
+       orientation="0,-1"
+       id="guide2"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="74.234557,133.91476"
+       orientation="0,-1"
+       id="guide3"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="24.264058,199.46298"
+       orientation="1,0"
+       id="guide1"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="32.726028,198.05265"
+       orientation="1,0"
+       id="guide4"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="28.783519,197.82828"
+       orientation="0,-1"
+       id="guide5"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.280001;stroke-linecap:round;stroke-opacity:1"
+       id="rect1"
+       width="8.4666662"
+       height="8.4666662"
+       x="24.200541"
+       y="93.987183" />
+    <rect
+       style="fill:#ed7d31;fill-opacity:1;stroke-width:0.0590544;stroke-linecap:round"
+       id="rect2"
+       width="8.4666662"
+       height="1.9840963"
+       x="24.26465"
+       y="93.891014" />
+    <rect
+       style="fill:#ed7d31;fill-opacity:1;stroke-width:0.00849159;stroke-linecap:round"
+       id="rect2-2"
+       width="1.0944952"
+       height="0.31734458"
+       x="24.211695"
+       y="98.823601" />
+    <rect
+       style="fill:#ed7d31;fill-opacity:1;stroke-width:0.00849159;stroke-linecap:round"
+       id="rect2-2-1"
+       width="1.0944952"
+       height="0.31734458"
+       x="31.593784"
+       y="98.826546" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:1.5875px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.280001;stroke-linecap:round;stroke-opacity:1"
+       x="28.494343"
+       y="95.252319"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:1.5875px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.28;stroke-opacity:1"
+         x="28.494343"
+         y="95.252319">Soul Cockpit</tspan></text>
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:#ed7d31;stroke-width:0.073562;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+       id="path2"
+       cx="28.463017"
+       cy="99.040276"
+       r="2.741344" />
+    <circle
+       style="fill:#ebf1de;fill-opacity:1;stroke:none;stroke-width:0.070999;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+       id="path2-8"
+       cx="28.4865"
+       cy="99.032921"
+       r="2.6458333" />
+  </g>
+</svg>
