@@ -1,0 +1,20 @@
+{
+  "name": "SoulCockpit",
+  "short_name": "SoulCockpit",
+  "start_url": "/soulcockpit-website/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a1a",
+  "icons": [
+    {
+      "src": "/soulcockpit-website/images/Icon-192.PNG",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/soulcockpit-website/images/Icon-512.PNG",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
