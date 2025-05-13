@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <title>Soul Cockpit</title>
+  <style>
+    body {
+      background-color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .slider {
+      max-width: 800px;
+      margin: 40px auto;
+      position: relative;
+    }
+
+    .slides img {
+      display: none;
+      width: 100%;
+      height: auto;
+    }
+
+    .slides img.active {
+      display: block;
+    }
+
+    .nav-buttons {
+      margin-top: 20px;
+    }
+
+    .nav-buttons button {
+      background-color: #ED7D31;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      font-size: 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 0 15px;
+    }
+
+    .nav-buttons button:hover {
+      background-color: #cf6925;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer a {
+      color: #007BFF;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slider">
+    <div class="slides">
+      <img src="images/Bild1.PNG" class="active" id="img1" alt="Bild 1">
+      <img src="images/Bild2.svg" id="img2" alt="Bild 2">
+      <img src="images/Bild3.svg" id="img3" alt="Bild 3">
+    </div>
+
+    <div class="nav-buttons">
+      <button onclick="prevSlide()">❮</button>
+      <button onclick="nextSlide()">❯</button>
+    </div>
+  </div>
+
+<footer style="color: #ED7D31; text-align: center; margin-top: 40px; font-family: Arial, sans-serif;">
+    © 2025 Soul Cockpit | Teymur Schafi-Neya | <span style="font-size: 0.9em;">mobil:</span> +49-177 754 1627
+    <br>
+    <a href="impressum.html" style="color: blue; text-decoration: none; margin: 0 10px;">Impressum</a>
+    <span style="color: blue; font-weight: bold;">|</span>
+    <a href="datenschutz.html" style="color: blue; text-decoration: none; margin: 0 10px;">Datenschutz</a>
+</footer>
+  
+  <script>
+    const images = document.querySelectorAll('.slides img');
+    let current = 0;
+
+    function showSlide(index) {
+      images.forEach((img, i) => {
+        img.classList.toggle('active', i === index);
+      });
+    }
+
+    function nextSlide() {
+      current = (current + 1) % images.length;
+      showSlide(current);
+    }
+
+    function prevSlide() {
+      current = (current - 1 + images.length) % images.length;
+      showSlide(current);
+    }
+  </script>
+
+</body>
+</html>
