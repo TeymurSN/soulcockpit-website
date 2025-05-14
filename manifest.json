@@ -1,18 +1,20 @@
 {
-  "name": "SoulCockpit",
-  "short_name": "SoulCockpit",
-  "start_url": "/soulcockpit-website/",
+  "name": "Soulcockpit",
+  "short_name": "Soulcockpit",
+  "description": "Deine persönliche Soulcockpit-Webapp",
+  "lang": "de-DE",
+  "start_url": "/index.html",
   "display": "standalone",
+  "theme_color": "#222222",
   "background_color": "#ffffff",
-  "theme_color": "#1a1a1a",
   "icons": [
     {
-      "src": "/soulcockpit-website/images/Icon-192.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/soulcockpit-website/images/Icon-512.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
