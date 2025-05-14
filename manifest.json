@@ -1,7 +1,7 @@
 {
   "name": "SoulCockpit",
   "short_name": "SoulCockpit",
-  "start_url": "/soulcockpit-website/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1a1a1a",
