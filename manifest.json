@@ -3,8 +3,8 @@
   "short_name": "SoulCockpit",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ED7D31",
-  "theme_color": "#ED7D31",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "images/icon-192.png",
