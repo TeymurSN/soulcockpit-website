@@ -61,29 +61,40 @@
       background-color: #cf6925;
     }
 
-    .book-button {
-      display: inline-flex;
-      align-items: center;
-      background-color: #ED7D31;
-      color: white;
-      padding: 12px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-      margin-top: 30px;
-    }
+.book-button {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  margin-top: 30px;
+  text-decoration: none;
+}
 
-    .book-button:hover {
-      background-color: #cf6925;
-    }
+.book-button-logo {
+  background-color: white;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+}
 
-    .book-button img {
-      height: 24px;
-      margin-right: 10px;
-    }
+.book-button-logo img {
+  height: 28px;
+}
+
+.book-button-text {
+  background-color: #ED7D31;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 12px 18px;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.book-button:hover .book-button-text {
+  background-color: #cf6925;
+}
 
     footer {
       margin-top: 40px;
@@ -117,12 +128,15 @@
     </div>
   </div>
 
-  <!-- Buch-Link-Button -->
-  <a href="https://www.silberschnur.de/neues-bewusstsein/1080515/Was-dich-wirklich-weiterbringt"
-     class="book-button" target="_blank" rel="noopener">
+<a href="https://www.silberschnur.de/neues-bewusstsein/1080515/Was-dich-wirklich-weiterbringt"
+   class="book-button" target="_blank" rel="noopener">
+  <span class="book-button-logo">
     <img src="images/silberschnur-logo.svg" alt="Silberschnur Verlag Logo">
-    Buch beim Silberschnurverlag ansehen
-  </a>
+  </span>
+  <span class="book-button-text">
+    Buch beim Verlag bestellen
+  </span>
+</a>
 
   <footer style="color: #ED7D31; text-align: center; margin-top: 40px; font-family: Arial, sans-serif;">
     © 2025 Soul Cockpit | Teymur Schafi-Neya | <span style="font-size: 0.9em;">mobil:</span> +49-177 754 1627
