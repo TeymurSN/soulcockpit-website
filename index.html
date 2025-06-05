@@ -44,10 +44,11 @@
 
     .nav-buttons {
       margin-top: 10px;
-      margin-bottom: 0; /* optional: falls zusätzlich Abstand unten entsteht */
+      margin-bottom: 0;
     }
 
-    .nav-buttons button {
+    .nav-buttons button,
+    .nav-buttons a.enter-button {
       background-color: #ED7D31;
       border: none;
       color: white;
@@ -55,47 +56,50 @@
       font-size: 24px;
       border-radius: 6px;
       cursor: pointer;
-      margin: 0 15px;
+      margin: 0 10px;
+      text-decoration: none;
+      display: inline-block;
     }
 
-    .nav-buttons button:hover {
+    .nav-buttons button:hover,
+    .nav-buttons a.enter-button:hover {
       background-color: #cf6925;
     }
 
-.book-button {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  margin-top: 10px;
-  text-decoration: none;
-}
+    .book-button {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      margin-top: 20px;
+      text-decoration: none;
+    }
 
-.book-button-logo {
-  background-color: white;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-}
+    .book-button-logo {
+      background-color: white;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+    }
 
-.book-button-logo img {
-  height: 28px;
-}
+    .book-button-logo img {
+      height: 28px;
+    }
 
-.book-button-text {
-  background-color: #ED7D31;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  padding: 12px 18px;
-  display: inline-block;
-  transition: background-color 0.3s ease;
-}
+    .book-button-text {
+      background-color: #ED7D31;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 12px 18px;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
 
-.book-button:hover .book-button-text {
-  background-color: #cf6925;
-}
+    .book-button:hover .book-button-text {
+      background-color: #cf6925;
+    }
 
     footer {
       margin-top: 40px;
@@ -121,24 +125,24 @@
       <img src="images/Bild1.PNG" class="active" id="img1" alt="Bild 1">
       <img src="images/Bild2.svg" id="img2" alt="Bild 2">
       <img src="images/Bild3.PNG" id="img3" alt="Bild 3">
-      <img src="images/Bild4.svg" id="img4" alt="Bild 4">
     </div>
 
     <div class="nav-buttons">
       <button onclick="prevSlide()">❮</button>
       <button onclick="nextSlide()">❯</button>
+      <a href="ueber.html" class="enter-button">Enter</a>
     </div>
   </div>
 
-<a href="https://www.silberschnur.de/neues-bewusstsein/1080515/Was-dich-wirklich-weiterbringt"
-   class="book-button" target="_blank" rel="noopener">
-  <span class="book-button-logo">
-    <img src="images/silberschnur-logo.svg" alt="Silberschnur Verlag Logo">
-  </span>
-  <span class="book-button-text">
-    Buch beim Verlag bestellen
-  </span>
-</a>
+  <a href="https://www.silberschnur.de/neues-bewusstsein/1080515/Was-dich-wirklich-weiterbringt"
+     class="book-button" target="_blank" rel="noopener">
+    <span class="book-button-logo">
+      <img src="images/silberschnur-logo.svg" alt="Silberschnur Verlag Logo">
+    </span>
+    <span class="book-button-text">
+      Buch beim Verlag bestellen
+    </span>
+  </a>
 
   <footer style="color: #ED7D31; text-align: center; margin-top: 40px; font-family: Arial, sans-serif;">
     © 2025 Soul Cockpit | Teymur Schafi-Neya | <span style="font-size: 0.9em;">mobil:</span> +49-177 754 1627
@@ -171,4 +175,3 @@
 
 </body>
 </html>
-
