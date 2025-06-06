@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reisen zur Schwelle | Soul Cockpit</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: white;
+      text-align: center;
+    }
+
+    .header {
+      background-color: #ED7D31;
+      color: white;
+      padding: 10px 0;
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Content Bereich */
+    .content {
+      padding: 20px;
+      text-align: left;
+      max-width: 800px;
+      margin: 30px auto;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    /* Navigation Buttons Bereich */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .nav-buttons a {
+      background-color: #ED7D31;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      font-size: 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-buttons a.back {
+      padding: 12px 20px;
+      font-size: 18px;
+    }
+
+    .nav-buttons a:hover {
+      background-color: #cf6925;
+    }
+
+    /* Themenblöcke */
+    .themen-block {
+      background-color: #f9f9f9;
+      border-left: 4px solid #ED7D31;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .themen-block h3 {
+      color: black;
+      margin-top: 0;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .themen-block h3 .green {
+      color: rgb(0,176,80);
+      font-style: italic;
+      font-weight: normal;
+    }
+
+    .themen-block h3 .separator {
+      color: #ED7D31;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .themen-block p {
+      margin: 10px 0 20px 0;
+    }
+
+    .themen-block a {
+      background-color: #ED7D31;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 18px;
+      display: inline-block;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .themen-block a:hover {
+      background-color: #cf6925;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 20px 0;
+      font-size: 14px;
+      text-align: center;
+      color: #ED7D31;
+    }
+
+    footer a {
+      color: #007BFF;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    footer span {
+      color: blue;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    Soul Cockpit
+  </div>
+
+  <!-- Inhalt -->
+<div class="content">
+  <h2 style="color: #ED7D31;"><em>Reisen zur Schwelle</em></h2>
+
+  <p>Manche Themen begleiten uns still bis an die <em>Schwelle</em> echter Veränderung. Hier finden Sie kleine Impulse, die einladen, innezuhalten und neu zu schauen.</p>
+
+  <div class="themen-block">
+    <h3>
+      <span class="black">Festhalten</span> 
+      <span class="separator">|</span> 
+      <span class="green">Loslassen</span>
+    </h3>
+    <p>Wo etwas gehen darf, entsteht Raum für Neues. <span class="green">Loslassen</span> heißt nicht verlieren — es heißt, innerlich frei werden.</p>
+    <a href="loslassen.html" class="orange-button">Mehr erfahren</a>
+  </div>
+
+  <div class="themen-block">
+    <h3>
+      <span class="black">Urteilen<span class="dot"> • </span>Nachtragen</span> 
+      <span class="separator">|</span> 
+      <span class="green">Vergebung<span class="dot"> • </span>Mitgefühl</span>
+    </h3>
+    <p><span class="green">Vergebung</span> öffnet das Herz. Wer vergibt, heilt nicht nur andere, sondern zuerst sich selbst.</p>
+    <a href="vergebung.html" class="orange-button">Mehr erfahren</a>
+  </div>
+
+  <div class="themen-block">
+    <h3>
+      <span class="black">Schuldzuweisung<span class="dot"> • </span>Opferhaltung</span> 
+      <span class="separator">|</span> 
+      <span class="green">Verantwortung</span>
+    </h3>
+    <p><span class="green">Verantwortung</span> bedeutet Freiheit: Den eigenen Weg anzuerkennen – und ihn bewusst zu gestalten.</p>
+    <a href="verantwortung.html" class="orange-button">Mehr erfahren</a>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <a id="prev-button" href="#">❮</a>
+    <a id="next-button" href="#">❯</a>
+    <a href="leistungen.html" class="back">zurück</a>
+  </div>
+</div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Soul Cockpit | Teymur Schafi-Neya | <span style="font-size: 0.9em;">mobil:</span> +49-177 754 1627
+    <br>
+    <a href="impressum.html">Impressum</a>
+    <span>|</span>
+    <a href="datenschutz.html">Datenschutz</a>
+  </footer>
+
+  <!-- Navigation Logik -->
+  <script>
+    const pages = ["ueber.html", "allgemein.html", "fuehrung.html", "leistungen.html", "reisen.html"];
+    const currentPage = window.location.pathname.split("/").pop();
+
+    let currentIndex = pages.indexOf(currentPage);
+
+    if (currentIndex === -1) currentIndex = 0;
+
+    const prevIndex = (currentIndex - 1 + pages.length) % pages.length;
+    const nextIndex = (currentIndex + 1) % pages.length;
+
+    document.getElementById('prev-button').href = pages[prevIndex];
+    document.getElementById('next-button').href = pages[nextIndex];
+  </script>
+
+</body>
+</html>
