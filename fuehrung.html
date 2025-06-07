@@ -12,7 +12,6 @@
       text-align: center;
     }
 
-    /* Orangener Balken oben */
     .header {
       background-color: #ED7D31;
       color: white;
@@ -21,9 +20,45 @@
       font-weight: bold;
       max-width: 800px;
       margin: 0 auto;
+      position: relative;
     }
 
-    /* Content Bereich */
+    /* Menü Button */
+    .menu-button {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    /* Dropdown Menü */
+    .menu-content {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: white;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      border: 1px solid #ED7D31;
+      z-index: 1;
+    }
+
+    .menu-content a {
+      color: #ED7D31;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 18px;
+      text-align: left;
+    }
+
+    .menu-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+
     .content {
       padding: 20px;
       text-align: left;
@@ -33,7 +68,17 @@
       line-height: 1.6;
     }
 
-    /* Navigation Buttons Bereich */
+    .quote {
+      font-size: 20px;
+      color: #ED7D31;
+      margin: 20px 0;
+    }
+
+    .quote span {
+      font-style: italic;
+      font-weight: bold;
+    }
+
     .nav-buttons {
       display: flex;
       justify-content: center;
@@ -65,7 +110,6 @@
       background-color: #cf6925;
     }
 
-    /* Footer */
     footer {
       margin-top: 40px;
       padding: 20px 0;
@@ -94,7 +138,16 @@
   <!-- Header -->
   <div class="header">
     Soul Cockpit: Führen im Fluss mit dem <em>Sein</em>
+  <div class="menu-button" onclick="toggleMenu()">☰</div>
+  <div class="menu-content" id="menu">
+    <a href="ueber.html">Über mich</a>
+    <a href="allgemein.html">Leben</a>
+    <a href="fuehrung.html">Führung</a>
+    <a href="leistungen.html">Leistungen</a>
+    <a href="reisen.html">Reisen</a>
+    <a href="index.html">Zurück</a>
   </div>
+</div>
 
   <!-- Inhalt -->
   <div class="content">
@@ -162,14 +215,13 @@
     <a href="datenschutz.html">Datenschutz</a>
   </footer>
 
-  <!-- Navigation Logik -->
+  <!-- Navigation Logik + Menü -->
   <script>
     const pages = ["ueber.html", "allgemein.html", "fuehrung.html", "leistungen.html", "reisen.html"];
     const currentPage = window.location.pathname.split("/").pop();
 
     let currentIndex = pages.indexOf(currentPage);
 
-    // Wenn aktuelle Seite nicht in der Liste ist, standardmäßig auf 0 (Sicherheit)
     if (currentIndex === -1) currentIndex = 0;
 
     const prevIndex = (currentIndex - 1 + pages.length) % pages.length;
@@ -177,6 +229,20 @@
 
     document.getElementById('prev-button').href = pages[prevIndex];
     document.getElementById('next-button').href = pages[nextIndex];
+
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Menü schließt sich, wenn außerhalb geklickt wird
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('menu');
+      const button = document.querySelector('.menu-button');
+      if (!menu.contains(event.target) && !button.contains(event.target)) {
+        menu.style.display = 'none';
+      }
+    });
   </script>
 
 </body>
