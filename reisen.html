@@ -12,37 +12,37 @@
       text-align: center;
     }
 
-    .header {
-      background-color: #ED7D31;
-      color: white;
-      padding: 10px 0;
-      font-size: 32px;
-      font-weight: bold;
-      max-width: 800px;
-      margin: 0 auto;
-      display: flex; /* Flex-Layout */
-      align-items: center; /* Zentriert Menü und Text */
-      justify-content: space-between; /* Abstand zwischen Titel und Button */
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      box-sizing: border-box;
-      padding: 0 20px;
-      height: 60px; /* Feste Höhe für Zentrierung */
-    }
+.header {
+  background-color: #ED7D31;
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  left: 50%; /* zentrieren */
+  transform: translateX(-50%); /* Mitte korrigieren */
+  z-index: 1000;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 800px; /* maximale Breite */
+  border-radius: 0; /* optional Rundung, wenn du willst */
+}
 
-        /* Menü Button */
-    .menu-button {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 24px;
-    }
+.title {
+  flex: 1;
+  text-align: center;
+}
 
+.menu-button {
+  position: absolute;
+  right: 20px;
+  font-size: 30px;
+  cursor: pointer;
+}
     /* Dropdown Menü */
     .menu-content {
       display: none;
