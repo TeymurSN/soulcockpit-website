@@ -12,22 +12,26 @@
       text-align: center;
     }
 
-  .header {
-    background-color: #ED7D31;
-    color: white;
-    padding: 10px 0;
-    font-size: 32px;
-    font-weight: bold;
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex; /* Flex-Layout */
-    align-items: center; /* Zentriert Menü und Text */
-    justify-content: space-between; /* Abstand zwischen Titel und Button */
-    position: relative; /* Das brauchst du! */
-    box-sizing: border-box;
-    padding: 0 20px;
-    height: 60px; /* Feste Höhe für Zentrierung */
-}
+    .header {
+      background-color: #ED7D31;
+      color: white;
+      padding: 10px 0;
+      font-size: 32px;
+      font-weight: bold;
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex; /* Flex-Layout */
+      align-items: center; /* Zentriert Menü und Text */
+      justify-content: space-between; /* Abstand zwischen Titel und Button */
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      box-sizing: border-box;
+      padding: 0 20px;
+      height: 60px; /* Feste Höhe für Zentrierung */
+    }
 
         /* Menü Button */
     .menu-button {
