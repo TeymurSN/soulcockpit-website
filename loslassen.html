@@ -13,26 +13,30 @@
     }
 
     /* Header */
-    .header {
-      background-color: #ED7D31;
-      color: white;
-      padding: 10px 0;
-      font-size: 32px;
-      font-weight: bold;
-      text-align: center;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    /* Content Bereich */
-    .content {
-      padding: 20px;
-      text-align: left;
-      max-width: 800px;
-      margin: 30px auto;
-      font-size: 18px;
-      line-height: 1.6;
-    }
+   .header {
+     background-color: #ED7D31;
+     color: white;
+     padding: 10px 0;
+     font-size: 32px;
+     font-weight: bold;
+     text-align: center;
+     max-width: 800px;
+     margin: 0 auto;
+     position: fixed;        /* <- FIXIERT */
+     top: 0;
+     left: 0;
+     right: 0;
+     z-index: 1000;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);  /* Eleganter Schatten */
+   }
+   .content {
+     padding: 20px;
+     text-align: left;
+     max-width: 800px;
+     margin: 100px auto 30px;  /* <-- OBEN 100px Abstand für Header */
+     font-size: 18px;
+     line-height: 1.6;
+   }
 
     /* Button Bereich */
     .nav-buttons {
