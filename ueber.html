@@ -20,7 +20,44 @@
       font-weight: bold;
       max-width: 800px;
       margin: 0 auto;
+      position: relative;
     }
+
+    /* Menü Button */
+    .menu-button {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    /* Dropdown Menü */
+    .menu-content {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: white;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      border: 1px solid #ED7D31;
+      z-index: 1;
+    }
+
+    .menu-content a {
+      color: #ED7D31;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 18px;
+      text-align: left;
+    }
+
+    .menu-content a:hover {
+      background-color: #f1f1f1;
+    }
+
 
     .content {
       padding: 20px;
@@ -99,9 +136,18 @@
 <body>
 
   <!-- Header -->
-  <div class="header">
-    Soul Cockpit
+<div class="header">
+  Soul Cockpit
+  <div class="menu-button" onclick="toggleMenu()">☰</div>
+  <div class="menu-content" id="menu">
+    <a href="ueber.html">Über mich</a>
+    <a href="allgemein.html">Leben</a>
+    <a href="fuehrung.html">Führung</a>
+    <a href="leistungen.html">Leistungen</a>
+    <a href="reisen.html">Reisen</a>
+    <a href="index.html">Zurück</a>
   </div>
+</div>
 
   <!-- Inhalt -->
   <div class="content">
@@ -147,7 +193,7 @@ nicht aus Anstrengung, sondern aus <em>Verbundenheit</em>.</p>
     <a href="datenschutz.html">Datenschutz</a>
   </footer>
 
-  <!-- Navigation Logik -->
+  <!-- Navigation Logik + Menü -->
   <script>
     const pages = ["ueber.html", "allgemein.html", "fuehrung.html", "leistungen.html", "reisen.html"];
     const currentPage = window.location.pathname.split("/").pop();
@@ -161,7 +207,22 @@ nicht aus Anstrengung, sondern aus <em>Verbundenheit</em>.</p>
 
     document.getElementById('prev-button').href = pages[prevIndex];
     document.getElementById('next-button').href = pages[nextIndex];
+
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Menü schließt sich, wenn außerhalb geklickt wird
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('menu');
+      const button = document.querySelector('.menu-button');
+      if (!menu.contains(event.target) && !button.contains(event.target)) {
+        menu.style.display = 'none';
+      }
+    });
   </script>
+
 
 </body>
 </html>
