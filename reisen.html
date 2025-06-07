@@ -12,18 +12,24 @@
       text-align: center;
     }
 
-    .header {
-      background-color: #ED7D31;
-      color: white;
-      padding: 10px 0;
-      font-size: 32px;
-      font-weight: bold;
-      max-width: 800px;
-      margin: 0 auto;
-      position: relative;
-    }
+  .header {
+    background-color: #ED7D31;
+    color: white;
+    padding: 10px 0;
+    font-size: 32px;
+    font-weight: bold;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex; /* Flex-Layout */
+    align-items: center; /* Zentriert Menü und Text */
+    justify-content: space-between; /* Abstand zwischen Titel und Button */
+    position: relative; /* Das brauchst du! */
+    box-sizing: border-box;
+    padding: 0 20px;
+    height: 60px; /* Feste Höhe für Zentrierung */
+}
 
-    /* Menü Button */
+        /* Menü Button */
     .menu-button {
       position: absolute;
       right: 20px;
@@ -58,7 +64,7 @@
       background-color: #f1f1f1;
     }
 
-
+    /* Content Bereich */
     .content {
       padding: 20px;
       text-align: left;
@@ -68,17 +74,7 @@
       line-height: 1.6;
     }
 
-    .quote {
-      font-size: 20px;
-      color: #ED7D31;
-      margin: 20px 0;
-    }
-
-    .quote span {
-      font-style: italic;
-      font-weight: bold;
-    }
-
+    /* Navigation Buttons Bereich */
     .nav-buttons {
       display: flex;
       justify-content: center;
@@ -110,10 +106,67 @@
       background-color: #cf6925;
     }
 
+    /* Themenblöcke */
+    .themen-block {
+      background-color: #f9f9f9;
+      border-left: 4px solid #ED7D31;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .themen-block h3 {
+      color: black;
+      margin-top: 0;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .themen-block h3 .green {
+      color: rgb(0,176,80);
+      font-style: italic;
+      font-weight: normal;
+    }
+
+    .themen-block h3 .separator {
+      color: #ED7D31;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .themen-block p {
+      margin: 10px 0 20px 0;
+    }
+
+    .themen-block a {
+      background-color: #ED7D31;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 18px;
+      display: inline-block;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .themen-block a:hover {
+      background-color: #cf6925;
+    }
+  
+    .green {
+      color: rgb(0,176,80);
+      font-style: italic;
+      font-weight: normal;
+   }
+
     footer {
       margin-top: 40px;
       padding: 20px 0;
       font-size: 14px;
+      text-align: center;
       color: #ED7D31;
     }
 
@@ -136,8 +189,8 @@
 <body>
 
   <!-- Header -->
-  <div class="header">
-    Soul Cockpit
+<div class="header">
+  Soul Cockpit
   <div class="menu-button" onclick="toggleMenu()">☰</div>
   <div class="menu-content" id="menu">
     <a href="ueber.html">Über mich</a>
@@ -271,6 +324,5 @@
       }
     });
   </script>
-
 </body>
 </html>
