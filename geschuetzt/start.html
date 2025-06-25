@@ -44,9 +44,11 @@
   <div id="viewer"></div>
   <div id="nav">
     <button id="prev">← Zurück</button>
+    <button id="toc">📑 Inhaltsverzeichnis</button>
     <button id="next">Weiter →</button>
+    <button onclick="window.location.href='../index.html'">🔙 Zurück zur App</button>
   </div>
-
+  
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const book = ePub("SoulCockpit.epub");
@@ -56,6 +58,15 @@
       });
 
       rendition.display();
+
+    document.getElementById("toc").addEventListener("click", () => {
+      const tocItem = book.navigation.toc[0]; // erstes Kapitel oder TOC-Eintrag
+      if (tocItem) {
+        rendition.display(tocItem.href);
+      } else {
+        alert("Kein Inhaltsverzeichnis gefunden.");
+     }
+      });
 
       // Navigation
       document.getElementById("prev").addEventListener("click", () => {
