@@ -155,23 +155,29 @@
   </div>
 </div>
 
-<!-- Inhalt: Login-Formular -->
-  <!-- Inhalt -->
-  <div class="content">
+<!-- Inhalt -->
+<div class="content">
 
-<h2 style="color: #ED7D31;"><em>Der Zugang zum geschützten Bereich ist nur mit Passwort möglich.</em></h2>
+  <h2 style="color: #ED7D31;"><em>Der Zugang zum geschützten Bereich ist nur mit Passwort möglich.</em></h2>
 
-<div style="margin-top: 30px;">
-  <a href="geschuetzt/start.html" style="
-    background-color: #ED7D31;
-    color: white;
-    padding: 12px 24px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 18px;
-  ">Zugang starten</a>
-</div>
-    
+  <form onsubmit="return checkLogin()" style="margin-top: 30px; max-width: 400px; margin-left: auto; margin-right: auto;">
+    <label for="username">Benutzername:</label><br>
+    <input type="text" id="username" name="username" required style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;"><br><br>
+
+    <label for="password">Passwort:</label><br>
+    <div style="position: relative;">
+      <input type="password" id="password" name="password" required style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;">
+      <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 12px; cursor: pointer; font-size: 18px;">👁️</span>
+    </div>
+    <br>
+
+    <div id="login-error" style="color: red; margin-bottom: 15px;"></div>
+
+    <button type="submit" style="background-color: #ED7D31; color: white; padding: 12px 24px; font-size: 18px; border: none; border-radius: 5px; cursor: pointer;">
+      Login
+    </button>
+  </form>
+
     <!-- Navigation Buttons -->
     <div class="nav-buttons">
        <a id="prev-button" href="#">❮</a>
@@ -222,5 +228,27 @@
     });
   </script>
 
+  <script>
+  function checkLogin() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const validUsername = "souluser";
+    const validPassword = "SoulCockpiT25";
+
+    if (username === validUsername && password === validPassword) {
+      window.location.href = "geschuetzt/start.html";
+      return false;
+    } else {
+      document.getElementById("login-error").textContent = "Zugangsdaten falsch.";
+      return false;
+    }
+  }
+
+  function togglePassword() {
+    const pwField = document.getElementById("password");
+    pwField.type = pwField.type === "password" ? "text" : "password";
+  }
+  </script>
 </body>
 </html>
