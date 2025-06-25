@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Soul Cockpit – Online lesen</title>
+  <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      user-select: none;          /* ⛔ verhindert Textauswahl */
+    }
+    #viewer {
+      height: 100vh;
+      width: 100vw;
+    }
+  </style>
+</head>
+<body oncontextmenu="return false">  <!-- ⛔ Rechtsklick deaktiviert -->
+  <div id="viewer"></div>
+
+  <script>
+    const book = ePub("epub/SoulCockpit.epub");
+    const rendition = book.renderTo("viewer", {
+      width: "100%",
+      height: "100%",
+    });
+    rendition.display();
+
+    // ⛔ Tastenereignisse für Kopieren unterbinden
+    document.addEventListener("keydown", function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === "c" || e.key === "s" || e.key === "u")) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
