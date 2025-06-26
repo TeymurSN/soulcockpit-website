@@ -39,12 +39,13 @@
   <script>
   document.addEventListener("DOMContentLoaded", () => {
     const book = ePub("SoulCockpit.epub");
-
     const rendition = book.renderTo("viewer", {
       flow:   "scrolled-doc",
       width:  "100%",
       height: "100%"
     });
+
+    // Basis-Override: einspaltig + max-width für Tablet/PC
     rendition.themes.override("body", {
       "column-count":         "1 !important",
       "-webkit-column-count": "1 !important",
@@ -53,13 +54,14 @@
       "margin":               "0 auto !important",
       "padding":              "1em !important"
     });
+
     rendition.display();
 
     // Navigation
     document.getElementById("prev").addEventListener("click", () => rendition.prev());
     document.getElementById("next").addEventListener("click", () => rendition.next());
 
-    // **TOC-Fix:** jetzt direkt auf index_split_002.html springen
+    // TOC-Fix: springt jetzt auf deine index_split_002.html
     const tocHref = "index_split_002.html";
     document.getElementById("toc").addEventListener("click", () => {
       rendition.display(tocHref);
@@ -70,17 +72,18 @@
       document.addEventListener(evt, e => e.preventDefault())
     );
 
-    // Kopierschutz & Layout bei Kapitelwechsel
+    // bei jedem Kapitelwechsel: Kopierschutz + Layout-Override im iFrame
     rendition.on("rendered", () => {
       const iframe = document.querySelector("#viewer iframe");
-      if (!iframe?.contentDocument) return;
+      if (!iframe || !iframe.contentDocument) return;
       const doc = iframe.contentDocument;
 
-      // Kopierschutz
-      ["copy","cut","contextmenu","selectstart","dragstart"]
-        .forEach(evt => doc.addEventListener(evt, e => e.preventDefault()));
+      // Kopierschutz im iFrame
+      ["copy","cut","contextmenu","selectstart","dragstart"].forEach(evt =>
+        doc.addEventListener(evt, e => e.preventDefault())
+      );
 
-      // Layout-Override
+      // Layout & Media-Query für Mobilgeräte
       const style = doc.createElement("style");
       style.textContent = `
         html, body {
@@ -99,16 +102,17 @@
           display: block;
           margin: 0 auto;
         }
-            /* ← Hier das Media-Query für Smartphones einfügen: */
-      @media only screen and (max-width: 480px) {
-        html, body {
-          max-width: 100% !important;
-          padding: 1em !important;
-          margin: 0 auto !important;
-          column-count: 1 !important;
+
+        /* Media Query: auf Smartphones immer volle Breite */
+        @media only screen and (max-width: 480px) {
+          html, body {
+            max-width: 100% !important;
+            padding: 1em !important;
+            margin: 0 auto !important;
+            column-count: 1 !important;
+          }
         }
-      }
-    `;
+      `;
       doc.head.appendChild(style);
     });
   });
