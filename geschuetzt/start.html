@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Soul Cockpit – Online lesen</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -11,14 +12,24 @@
     html, body {
       margin: 0; padding: 0; height: 100%; overflow: hidden;
       font-family: sans-serif; user-select: none;
+      background: #fff;
     }
     #viewer {
-      width: 100vw; height: calc(100vh - 50px);
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      /* unten genug Platz für Nav + Safe-Area */
+      bottom: calc(50px + env(safe-area-inset-bottom));
     }
     #nav {
-      height: 50px; display: flex;
-      justify-content: center; align-items: center;
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      /* Nav-Höhe + Safe-Area unten auf iOS */
+      height: calc(50px + env(safe-area-inset-bottom));
+      display: flex; justify-content: center; align-items: center;
       background: #f0f0f0;
+      padding-bottom: env(safe-area-inset-bottom);
+      box-sizing: border-box;
+      z-index: 1000;
     }
     button {
       margin: 0 10px; padding: 8px 16px; font-size: 14px;
@@ -37,85 +48,71 @@
   </div>
 
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const book = ePub("SoulCockpit.epub");
-    const rendition = book.renderTo("viewer", {
-      flow:   "scrolled-doc",
-      width:  "100%",
-      height: "100%"
-    });
+    document.addEventListener("DOMContentLoaded", () => {
+      const book = ePub("SoulCockpit.epub");
+      const rendition = book.renderTo("viewer", {
+        flow:   "scrolled-doc",
+        width:  "100%",
+        height: "100%"
+      });
 
-    // Basis-Override: einspaltig + max-width für Tablet/PC
-    rendition.themes.override("body", {
-      "column-count":         "1 !important",
-      "-webkit-column-count": "1 !important",
-      "column-gap":           "0 !important",
-      "max-width":            "600px !important",
-      "margin":               "0 auto !important",
-      "padding":              "1em !important"
-    });
+      rendition.themes.override("body", {
+        "column-count":         "1 !important",
+        "-webkit-column-count": "1 !important",
+        "column-gap":           "0 !important",
+        "max-width":            "600px !important",
+        "margin":               "0 auto !important",
+        "padding":              "1em !important"
+      });
 
-    rendition.display();
+      rendition.display();
 
-    // Navigation
-    document.getElementById("prev").addEventListener("click", () => rendition.prev());
-    document.getElementById("next").addEventListener("click", () => rendition.next());
+      document.getElementById("prev").addEventListener("click", () => rendition.prev());
+      document.getElementById("next").addEventListener("click", () => rendition.next());
+      const tocHref = "index_split_002.html";
+      document.getElementById("toc").addEventListener("click", () => rendition.display(tocHref));
 
-    // TOC-Fix: springt jetzt auf deine index_split_002.html
-    const tocHref = "index_split_002.html";
-    document.getElementById("toc").addEventListener("click", () => {
-      rendition.display(tocHref);
-    });
-
-    // globaler Kopierschutz
-    ["contextmenu","copy","cut","selectstart","dragstart"].forEach(evt =>
-      document.addEventListener(evt, e => e.preventDefault())
-    );
-
-    // bei jedem Kapitelwechsel: Kopierschutz + Layout-Override im iFrame
-    rendition.on("rendered", () => {
-      const iframe = document.querySelector("#viewer iframe");
-      if (!iframe || !iframe.contentDocument) return;
-      const doc = iframe.contentDocument;
-
-      // Kopierschutz im iFrame
-      ["copy","cut","contextmenu","selectstart","dragstart"].forEach(evt =>
-        doc.addEventListener(evt, e => e.preventDefault())
+      ["contextmenu","copy","cut","selectstart","dragstart"].forEach(evt =>
+        document.addEventListener(evt, e => e.preventDefault())
       );
 
-      // Layout & Media-Query für Mobilgeräte
-      const style = doc.createElement("style");
-      style.textContent = `
-        html, body {
-          margin: 0 !important;
-          padding: 0 !important;
-          column-count: 1 !important;
-          -webkit-column-count: 1 !important;
-          column-gap: 0 !important;
-          max-width: 600px !important;
-          margin-left: auto !important;
-          margin-right: auto !important;
-        }
-        img {
-          max-width: 100% !important;
-          height: auto !important;
-          display: block;
-          margin: 0 auto;
-        }
-
-        /* Media Query: auf Smartphones immer volle Breite */
-        @media only screen and (max-width: 480px) {
+      rendition.on("rendered", () => {
+        const iframe = document.querySelector("#viewer iframe");
+        if (!iframe?.contentDocument) return;
+        const doc = iframe.contentDocument;
+        ["copy","cut","contextmenu","selectstart","dragstart"].forEach(evt =>
+          doc.addEventListener(evt, e => e.preventDefault())
+        );
+        const style = doc.createElement("style");
+        style.textContent = `
           html, body {
-            max-width: 100% !important;
-            padding: 1em !important;
-            margin: 0 auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
             column-count: 1 !important;
+            -webkit-column-count: 1 !important;
+            column-gap: 0 !important;
+            max-width: 600px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
           }
-        }
-      `;
-      doc.head.appendChild(style);
+          img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+          }
+          @media only screen and (max-width: 480px) {
+            html, body {
+              max-width: 100% !important;
+              padding: 1em !important;
+              margin: 0 auto !important;
+              column-count: 1 !important;
+            }
+          }
+        `;
+        doc.head.appendChild(style);
+      });
     });
-  });
   </script>
 </body>
 </html>
