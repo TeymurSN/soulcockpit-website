@@ -14,7 +14,7 @@
       font-family: sans-serif; user-select: none; background: #fff;
     }
     #viewer {
-      position: absolute;
+    position: absolute;
       top:    0;
       left:   0;
       right:  0;
@@ -162,6 +162,15 @@
         }
       `;
       doc.head.appendChild(style);
+
+      doc.body.addEventListener("click", (e) => {
+        let a = e.target;
+        while (a && a.tagName !== "A") a = a.parentElement;
+        if (a && a.getAttribute("href")) {
+          e.preventDefault();
+          rendition.display(a.getAttribute("href"));
+        }
+      });
 
       // Auswahl zwangsweise zurücksetzen
       doc.addEventListener("selectionchange", () => {
