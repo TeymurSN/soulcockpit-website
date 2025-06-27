@@ -2,59 +2,35 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Soul Cockpit – Online lesen</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
 
   <style>
-    /* Grund-Layout */
     html, body {
       margin: 0; padding: 0; height: 100%; overflow: hidden;
-      font-family: sans-serif;
-      background: #fff;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
+      font-family: sans-serif; user-select: none; background: #fff;
     }
-
-    /* Viewer nimmt den gesamten Platz bis zur Nav */
     #viewer {
       position: absolute;
       top: 0; left: 0; right: 0;
       bottom: calc(50px + env(safe-area-inset-bottom));
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
     }
-
-    /* Fixe Navigation unten */
     #nav {
       position: absolute;
       bottom: 0; left: 0; right: 0;
       height: calc(50px + env(safe-area-inset-bottom));
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: flex; justify-content: center; align-items: center;
       background: #f0f0f0;
-      padding-bottom: env(safe-area-inset-bottom);
+      padding-bottom: calc(50px + env(safe-area-inset-bottom)) !important;
       box-sizing: border-box;
       z-index: 1000;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
     }
-
     button {
-      margin: 0 10px;
-      padding: 8px 16px;
-      font-size: 14px;
+      margin: 0 10px; padding: 8px 16px; font-size: 14px;
       cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
     }
   </style>
 </head>
@@ -69,103 +45,121 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const book = ePub("SoulCockpit.epub");
-      const rendition = book.renderTo("viewer", {
-        flow:   "scrolled-doc",
-        width:  "100%",
-        height: "100%"
-      });
+  document.addEventListener("DOMContentLoaded", async () => {
+    const book = ePub("SoulCockpit.epub");
+    const rendition = book.renderTo("viewer", {
+      flow:   "scrolled-doc",
+      width:  "100%",
+      height: "100%"
+    });
 
-      // Einspaltiges Layout + Bottom-Padding für Handys
-      rendition.themes.override("body", {
-        "column-count":         "1 !important",
-        "-webkit-column-count": "1 !important",
-        "column-gap":           "0 !important",
-        "max-width":            "600px !important",
-        "margin":               "0 auto !important",
-        "padding":              "1em !important",
-        "padding-bottom":       "60px !important",
-        "user-select":          "none !important"
-      });
+    // Einspaltiges Layout für alle Geräte
+    rendition.themes.override("body", {
+      "column-count":         "1 !important",
+      "-webkit-column-count": "1 !important",
+      "column-gap":           "0 !important",
+      "max-width":            "600px !important",
+      "margin":               "0 auto !important",
+      "padding":              "1em !important",
+      "padding-bottom": "calc(50px + env(safe-area-inset-bottom)) !important",
+      "user-select":          "none !important"
+    });
 
-      await rendition.display();
+    await rendition.display();
 
-      // Prev / Next
-      document.getElementById("prev").onclick = () => rendition.prev();
-      document.getElementById("next").onclick = () => rendition.next();
+    // Prev / Next
+    document.getElementById("prev").onclick = () => rendition.prev();
+    document.getElementById("next").onclick = () => rendition.next();
 
-      // Warte bis TOC geladen, dann dynamischer Sprung per CFI
-      await book.loaded.navigation;
-      document.getElementById("toc").onclick = () => {
-        const tocItem = book.navigation.toc[0];
-        if (tocItem) {
-          const target = tocItem.cfi || tocItem.href;
-          rendition.display(target);
-        } else {
-          alert("Kein Inhaltsverzeichnis gefunden");
-        }
-      };
+    // Warte auf Navigation
+    await book.loaded.navigation;
+    console.log("TOC geladen:", book.navigation.toc);
 
-      // Globaler Kopierschutz & Touch-Block
+    // Suche den TOC-Eintrag „Inhaltsverzeichnis“
+    const tocEntry = book.navigation.toc.find(item => {
+      const label = item.label;
+      if (Array.isArray(label)) {
+        return label.some(l => l.trim().toLowerCase() === "inhaltsverzeichnis");
+      } else if (typeof label === "string") {
+        return label.trim().toLowerCase() === "inhaltsverzeichnis";
+      }
+      return false;
+    });
+
+    // Bestimme den Ziel-Link oder fallback
+    const tocTarget = tocEntry
+      ? (tocEntry.cfi || tocEntry.href)
+      : "index_split_002.html";
+
+    // Klick-Handler auf Inhaltsverzeichnis
+    document.getElementById("toc").onclick = () => {
+      rendition.display(tocTarget);
+    };
+
+    // Globaler Kopierschutz & Touch-Block
+    ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"]
+      .forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
+
+    // Bei jedem Kapitelwechsel härtere Regeln im iFrame
+    rendition.on("rendered", () => {
+      const iframe = document.querySelector("#viewer iframe");
+      if (!iframe?.contentDocument) return;
+      const doc = iframe.contentDocument;
+
+      // alle selektions-/kopier-/touch-Events blocken
       ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"]
-        .forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
+        .forEach(evt => doc.addEventListener(evt, e => e.preventDefault()));
 
-      // iFrame-harte Regeln bei jedem Kapitelwechsel
-      rendition.on("rendered", () => {
-        const iframe = document.querySelector("#viewer iframe");
-        if (!iframe?.contentDocument) return;
-        const doc = iframe.contentDocument;
-
-        // blockiere alle relevanten Ereignisse
-        ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"]
-          .forEach(evt => doc.addEventListener(evt, e => e.preventDefault()));
-
-        // Inject CSS
-        const style = doc.createElement("style");
-        style.textContent = `
+      // Injectiertes CSS
+      const style = doc.createElement("style");
+      style.textContent = `
+        html, body {
+          margin: 0 !important;
+          padding: 0 !important;
+          column-count: 1 !important;
+          -webkit-column-count: 1 !important;
+          column-gap: 0 !important;
+          max-width: 600px !important;
+          margin: 0 auto !important;
+          padding-bottom: calc(50px + env(safe-area-inset-bottom)) !important;
+          user-select: none !important;
+          -webkit-user-select: none !important;
+          -webkit-touch-callout: none !important;
+          -webkit-user-drag: none !important;
+        }
+        img {
+          max-width: 100% !important;
+          height: auto !important;
+          display: block;
+          margin: 0 auto;
+          user-drag: none !important;
+        }
+        *::selection {
+          background: transparent !important;
+          color: inherit !important;
+        }
+        @media only screen and (max-width: 480px) {
           html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            column-count: 1 !important;
-            -webkit-column-count: 1 !important;
-            column-gap: 0 !important;
-            max-width: 600px !important;
-            margin: 0 auto !important;
-            padding-bottom: 60px !important;
-            user-select: none !important;
-            -webkit-user-select: none !important;
-            -webkit-touch-callout: none !important;
-            -webkit-user-drag: none !important;
-          }
-          img {
             max-width: 100% !important;
-            height: auto !important;
-            display: block;
-            margin: 0 auto;
-            user-drag: none !important;
+            padding: 1em !important;
+            margin: 0 auto !important;
+            padding-bottom: calc(50px + env(safe-area-inset-bottom)) !important;
           }
-          *::selection {
-            background: transparent !important;
-            color: inherit !important;
+          body {
+            padding-bottom: 60px !important;
           }
-          @media only screen and (max-width: 480px) {
-            html, body {
-              max-width: 100% !important;
-              padding: 1em !important;
-              margin: 0 auto !important;
-            }
-          }
-        `;
-        doc.head.appendChild(style);
+        }
+      `;
+      doc.head.appendChild(style);
 
-        // Extra: jede Selektion sofort löschen
-        doc.addEventListener("selectionchange", () => {
-          const sel = doc.getSelection();
-          if (sel?.rangeCount) sel.removeAllRanges();
-        });
+      // Auswahl zwangsweise zurücksetzen
+      doc.addEventListener("selectionchange", () => {
+        const sel = doc.getSelection();
+        if (sel && sel.rangeCount) sel.removeAllRanges();
       });
     });
+  });
   </script>
+
 </body>
 </html>
