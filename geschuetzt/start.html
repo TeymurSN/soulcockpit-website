@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -17,28 +17,31 @@
     #viewer {
       position: absolute;
       top: 0; left: 0; right: 0;
+      /* unten genug Platz für Nav + Safe-Area */
       bottom: calc(50px + env(safe-area-inset-bottom));
-      /* Verhindert native Auswahl im Container */
-      user-select: none !important;
-      -webkit-user-select: none !important;
-      -webkit-touch-callout: none !important;
     }
     #nav {
       position: absolute;
       bottom: 0; left: 0; right: 0;
+      /* Nav-Höhe + Safe-Area unten auf iOS */
       height: calc(50px + env(safe-area-inset-bottom));
       display: flex; justify-content: center; align-items: center;
       background: #f0f0f0;
       padding-bottom: env(safe-area-inset-bottom);
       box-sizing: border-box;
       z-index: 1000;
-      /* Nav darf natürlich weiterhin Empfänge erlauben */
-      user-select: none !important;
     }
+
+    #viewer,
+    #viewer * {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -webkit-touch-callout: none !important;
+    }
+
     button {
       margin: 0 10px; padding: 8px 16px; font-size: 14px;
       cursor: pointer;
-      user-select: none;
     }
   </style>
 </head>
@@ -61,7 +64,6 @@
         height: "100%"
       });
 
-      // Einspaltiges Layout
       rendition.themes.override("body", {
         "column-count":         "1 !important",
         "-webkit-column-count": "1 !important",
@@ -73,33 +75,24 @@
 
       rendition.display();
 
-      // Navigation
       document.getElementById("prev").addEventListener("click", () => rendition.prev());
       document.getElementById("next").addEventListener("click", () => rendition.next());
-      document.getElementById("toc").addEventListener("click", () =>
-        rendition.display("index_split_002.html")
-      );
+      const tocHref = "index_split_002.html";
+      document.getElementById("toc").addEventListener("click", () => rendition.display(tocHref));
 
-      // Globaler Kopierschutz
-      ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"].forEach(evt =>
+      ["contextmenu","copy","cut","selectstart","dragstart"].forEach(evt =>
         document.addEventListener(evt, e => e.preventDefault())
       );
 
-      // Bei jedem neuen Kapitel das iFrame zusätzlich härten
       rendition.on("rendered", () => {
         const iframe = document.querySelector("#viewer iframe");
         if (!iframe?.contentDocument) return;
         const doc = iframe.contentDocument;
-
-        // Events blocken
-        ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"].forEach(evt =>
+        ["copy","cut","contextmenu","selectstart","dragstart"].forEach(evt =>
           doc.addEventListener(evt, e => e.preventDefault())
         );
-
-        // Injectiertes CSS im iFrame
         const style = doc.createElement("style");
         style.textContent = `
-          /* Grundregeln */
           html, body {
             margin: 0 !important;
             padding: 0 !important;
@@ -109,39 +102,23 @@
             max-width: 600px !important;
             margin-left: auto !important;
             margin-right: auto !important;
-            user-select: none !important;
-            -webkit-user-select: none !important;
-            -webkit-touch-callout: none !important;
-            -webkit-user-drag: none !important;
           }
           img {
             max-width: 100% !important;
             height: auto !important;
             display: block;
             margin: 0 auto;
-            user-drag: none !important;
           }
-          /* Verhindert Hervorhebung */
-          *::selection {
-            background: transparent !important;
-            color: inherit !important;
-          }
-          /* Mobile: volle Breite */
           @media only screen and (max-width: 480px) {
             html, body {
               max-width: 100% !important;
               padding: 1em !important;
               margin: 0 auto !important;
+              column-count: 1 !important;
             }
           }
         `;
         doc.head.appendChild(style);
-
-        // Deaktiviert jegliche Auswahl im iFrame (zusätzlich)
-        doc.addEventListener("selectionchange", () => {
-          const sel = doc.getSelection();
-          if (sel && sel.rangeCount) sel.removeAllRanges();
-        });
       });
     });
   </script>
