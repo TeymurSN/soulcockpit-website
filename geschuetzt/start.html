@@ -2,36 +2,59 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Soul Cockpit – Online lesen</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
 
   <style>
+    /* Grund-Layout */
     html, body {
       margin: 0; padding: 0; height: 100%; overflow: hidden;
-      font-family: sans-serif; user-select: none;
+      font-family: sans-serif;
       background: #fff;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
+
+    /* Viewer nimmt den gesamten Platz bis zur Nav */
     #viewer {
       position: absolute;
       top: 0; left: 0; right: 0;
       bottom: calc(50px + env(safe-area-inset-bottom));
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
+
+    /* Fixe Navigation unten */
     #nav {
       position: absolute;
       bottom: 0; left: 0; right: 0;
       height: calc(50px + env(safe-area-inset-bottom));
-      display: flex; justify-content: center; align-items: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background: #f0f0f0;
       padding-bottom: env(safe-area-inset-bottom);
       box-sizing: border-box;
       z-index: 1000;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
+
     button {
-      margin: 0 10px; padding: 8px 16px; font-size: 14px;
+      margin: 0 10px;
+      padding: 8px 16px;
+      font-size: 14px;
       cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
   </style>
 </head>
@@ -46,7 +69,7 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       const book = ePub("SoulCockpit.epub");
       const rendition = book.renderTo("viewer", {
         flow:   "scrolled-doc",
@@ -54,7 +77,7 @@
         height: "100%"
       });
 
-      // Einspaltiges Layout auch im Haupt‐Dokument
+      // Einspaltiges Layout + Bottom-Padding für Handys
       rendition.themes.override("body", {
         "column-count":         "1 !important",
         "-webkit-column-count": "1 !important",
@@ -62,16 +85,18 @@
         "max-width":            "600px !important",
         "margin":               "0 auto !important",
         "padding":              "1em !important",
+        "padding-bottom":       "60px !important",
         "user-select":          "none !important"
       });
 
-      rendition.display();
+      await rendition.display();
 
       // Prev / Next
       document.getElementById("prev").onclick = () => rendition.prev();
       document.getElementById("next").onclick = () => rendition.next();
 
-      // Dynamischer TOC-Sprung per CFI
+      // Warte bis TOC geladen, dann dynamischer Sprung per CFI
+      await book.loaded.navigation;
       document.getElementById("toc").onclick = () => {
         const tocItem = book.navigation.toc[0];
         if (tocItem) {
@@ -79,42 +104,45 @@
           rendition.display(target);
         } else {
           alert("Kein Inhaltsverzeichnis gefunden");
-       }
+        }
       };
-      // globaler Kopierschutz & Touch‐Block
-      ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"].forEach(evt => {
-        document.addEventListener(evt, e => e.preventDefault());
-      });
 
-      // bei jedem Kapitelwechsel: härtere Regeln im iFrame
+      // Globaler Kopierschutz & Touch-Block
+      ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"]
+        .forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
+
+      // iFrame-harte Regeln bei jedem Kapitelwechsel
       rendition.on("rendered", () => {
         const iframe = document.querySelector("#viewer iframe");
         if (!iframe?.contentDocument) return;
         const doc = iframe.contentDocument;
 
-        // blockieren aller Selektions‐, Copy‐, Touch‐Events im iFrame
-        ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"].forEach(evt => {
-          doc.addEventListener(evt, e => e.preventDefault());
-        });
+        // blockiere alle relevanten Ereignisse
+        ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"]
+          .forEach(evt => doc.addEventListener(evt, e => e.preventDefault()));
 
-        // injectiertes CSS
+        // Inject CSS
         const style = doc.createElement("style");
         style.textContent = `
           html, body {
-            margin: 0 !important; padding: 0 !important;
-            column-count: 1 !important; -webkit-column-count: 1 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            column-count: 1 !important;
+            -webkit-column-count: 1 !important;
             column-gap: 0 !important;
             max-width: 600px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
+            margin: 0 auto !important;
+            padding-bottom: 60px !important;
             user-select: none !important;
             -webkit-user-select: none !important;
             -webkit-touch-callout: none !important;
             -webkit-user-drag: none !important;
           }
           img {
-            max-width: 100% !important; height: auto !important;
-            display: block; margin: 0 auto;
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
             user-drag: none !important;
           }
           *::selection {
@@ -131,7 +159,7 @@
         `;
         doc.head.appendChild(style);
 
-        // sicherheitshalber auch selectionchange im iFrame
+        // Extra: jede Selektion sofort löschen
         doc.addEventListener("selectionchange", () => {
           const sel = doc.getSelection();
           if (sel?.rangeCount) sel.removeAllRanges();
