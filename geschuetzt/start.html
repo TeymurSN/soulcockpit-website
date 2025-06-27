@@ -57,9 +57,11 @@
   <!-- EPUB-Init und iframe-spezifischer Copy-Guard -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       const book = ePub("SoulCockpit.epub");
       const rendition = book.renderTo("viewer", {
-        flow:   "scrolled-doc",
+        flow:   isIOS ? "paginated" : "scrolled-doc",
+        spread: isIOS ? "none" : undefined,
         width:  "100%",
         height: "100%"
       });
@@ -87,50 +89,33 @@
         document.addEventListener(evt, e => e.preventDefault())
       );
 
-      // bei jedem rendern im iFrame: Copy-Guard + einspaltiges Styling
-      rendition.on("rendered", () => {
-        const iframe = document.querySelector("#viewer iframe");
-        if (!iframe?.contentDocument) return;
-        const doc = iframe.contentDocument;
+      // Wenn wir im paginated-Modus sind, injiziere zusätzlich die iframe-Guards
+      if (isIOS) {
+        rendition.on("rendered", () => {
+          const iframe = document.querySelector("#viewer iframe");
+          if (!iframe?.contentDocument) return;
+          const doc = iframe.contentDocument;
 
-        // Copy-Guard im iFrame
-        ["copy","cut","contextmenu","selectstart","dragstart"].forEach(evt =>
-          doc.addEventListener(evt, e => e.preventDefault())
-        );
+          // Kopierschutz im iFrame
+          ["copy","cut","contextmenu","selectstart","dragstart"]
+            .forEach(evt => doc.addEventListener(evt, e => e.preventDefault()));
 
-        // Layout-Override im iFrame
-        const style = doc.createElement("style");
-        style.textContent = `
-          html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            column-count: 1 !important;
-            -webkit-column-count: 1 !important;
-            column-gap: 0 !important;
-            max-width: 600px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-          }
-          img {
-            max-width: 100% !important;
-            height: auto !important;
-            display: block;
-            margin: 0 auto;
-          }
-          @media only screen and (max-width: 480px) {
-            html, body {
-              max-width: 100% !important;
-              padding: 1em !important;
-              margin: 0 auto !important;
-              column-count: 1 !important;
+          // iframe-CSS-Override
+          const style = doc.createElement("style");
+          style.textContent = `
+            * {
+              user-select: none !important;
+              -webkit-user-select: none !important;
+              -webkit-touch-callout: none !important;
+              -webkit-user-drag: none !important;
             }
-          }
-        `;
-        doc.head.appendChild(style);
-      });
+          `;
+          doc.head.appendChild(style);
+        });
+      }
     });
   </script>
-
+  
   <!-- Globaler Selection-Guard -->
   <script>
     document.addEventListener("selectionchange", () => {
