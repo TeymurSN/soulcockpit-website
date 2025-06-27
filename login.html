@@ -27,7 +27,6 @@
       z-index: 1000;
     }
 
-    /* Menü Button */
     .menu-button {
       position: absolute;
       right: 20px;
@@ -37,7 +36,6 @@
       font-size: 24px;
     }
 
-    /* Dropdown Menü */
     .menu-content {
       display: none;
       position: absolute;
@@ -66,20 +64,9 @@
       padding: 40px;
       text-align: left;
       max-width: 800px;
-      margin: 30px auto;
+      margin: 100px auto 30px; /* oben Platz für Header */
       font-size: 18px;
       line-height: 1.6;
-    }
-
-    .quote {
-      font-size: 20px;
-      color: #ED7D31;
-      margin: 20px 0;
-    }
-
-    .quote span {
-      font-style: italic;
-      font-weight: bold;
     }
 
     .nav-buttons {
@@ -105,7 +92,6 @@
     }
 
     .nav-buttons a.back {
-      padding: 12px 20px;
       font-size: 18px;
     }
 
@@ -141,48 +127,47 @@
   <!-- Header -->
   <div class="header">
     Soul Cockpit
-  <div class="menu-button" onclick="toggleMenu()">☰</div>
-  <div class="menu-content" id="menu">
-    <a href="ueber.html">Über mich</a>
-    <a href="allgemein.html">Leben</a>
-    <a href="fuehrung.html">Führung</a>
-    <a href="leistungen.html">Leistungen</a>
-    <a href="schwellen.html"><em>7 Schwellen</em></a>
-    <a href="phaenomene.html"><em>Phänomene</em></a>
-    <a href="orientierung.html"><em>Orientierung</em></a>
-    <a href="login.html">Login</a>   
-    <a href="index.html">Zurück</a>
-  </div>
-</div>
-
-<!-- Inhalt -->
-<div class="content">
-
-  <h2 style="color: #ED7D31;"><em>Der Zugang zum geschützten Bereich ist nur mit Passwort möglich.</em></h2>
-
-  <form onsubmit="return checkLogin()" style="margin-top: 30px; max-width: 400px; margin-left: auto; margin-right: auto;">
-    <label for="username">Benutzername:</label><br>
-    <input type="text" id="username" name="username" required style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;"><br><br>
-
-    <label for="password">Passwort:</label><br>
-    <div style="position: relative;">
-      <input type="password" id="password" name="password" required style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;">
-      <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 12px; cursor: pointer; font-size: 18px;">👁️</span>
+    <div class="menu-button" onclick="toggleMenu()">☰</div>
+    <div class="menu-content" id="menu">
+      <a href="ueber.html">Über mich</a>
+      <a href="allgemein.html">Leben</a>
+      <a href="fuehrung.html">Führung</a>
+      <a href="leistungen.html">Leistungen</a>
+      <a href="schwellen.html"><em>7 Schwellen</em></a>
+      <a href="phaenomene.html"><em>Phänomene</em></a>
+      <a href="orientierung.html"><em>Orientierung</em></a>
+      <a href="login.html">Login</a>
+      <a href="index.html">Zurück</a>
     </div>
-    <br>
+  </div>
 
-    <div id="login-error" style="color: red; margin-bottom: 15px;"></div>
+  <!-- Inhalt -->
+  <div class="content">
 
-    <button type="submit" style="background-color: #ED7D31; color: white; padding: 12px 24px; font-size: 18px; border: none; border-radius: 5px; cursor: pointer;">
-      Login
-    </button>
-  </form>
+    <h2 style="color: #ED7D31;"><em>Der Zugang zum geschützten Bereich ist nur mit Passwort möglich.</em></h2>
+
+    <form onsubmit="return checkLogin()" style="margin-top: 30px; max-width: 400px; margin-left: auto; margin-right: auto;">
+      <label for="username">Benutzername:</label><br>
+      <input type="text" id="username" name="username" required
+             style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;"><br><br>
+
+      <label for="password">Passwort:</label><br>
+      <input type="password" id="password" name="password" required
+             style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;"><br><br>
+
+      <div id="login-error" style="color: red; margin-bottom: 15px;"></div>
+
+      <button type="submit"
+              style="background-color: #ED7D31; color: white; padding: 12px 24px; font-size: 18px; border: none; border-radius: 5px; cursor: pointer;">
+        Login
+      </button>
+    </form>
 
     <!-- Navigation Buttons -->
     <div class="nav-buttons">
-       <a id="prev-button" href="#">❮</a>
-       <a id="next-button" href="#">❯</a>
-       <a class="back" href="index.html">zurück</a>
+      <a id="prev-button" href="#">❮</a>
+      <a id="next-button" href="#">❯</a>
+      <a class="back" href="index.html">zurück</a>
     </div>
 
   </div>
@@ -202,23 +187,15 @@
   <script>
     const pages = ["ueber.html", "allgemein.html", "fuehrung.html", "leistungen.html", "schwellen.html", "phaenomene.html", "orientierung.html", "login.html"];
     const currentPage = window.location.pathname.split("/").pop();
-
     let currentIndex = pages.indexOf(currentPage);
-
     if (currentIndex === -1) currentIndex = 0;
-
-    const prevIndex = (currentIndex - 1 + pages.length) % pages.length;
-    const nextIndex = (currentIndex + 1) % pages.length;
-
-    document.getElementById('prev-button').href = pages[prevIndex];
-    document.getElementById('next-button').href = pages[nextIndex];
+    document.getElementById('prev-button').href = pages[(currentIndex - 1 + pages.length) % pages.length];
+    document.getElementById('next-button').href = pages[(currentIndex + 1) % pages.length];
 
     function toggleMenu() {
       const menu = document.getElementById('menu');
       menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
-
-    // Menü schließt sich, wenn außerhalb geklickt wird
     document.addEventListener('click', function(event) {
       const menu = document.getElementById('menu');
       const button = document.querySelector('.menu-button');
@@ -228,27 +205,22 @@
     });
   </script>
 
+  <!-- Login-Logik -->
   <script>
-  function checkLogin() {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    function checkLogin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const validUsername = "souluser";
+      const validPassword = "SoulCockpiT25";
 
-    const validUsername = "souluser";
-    const validPassword = "SoulCockpiT25";
-
-    if (username === validUsername && password === validPassword) {
-      window.location.href = "geschuetzt/start.html";
-      return false;
-    } else {
-      document.getElementById("login-error").textContent = "Zugangsdaten falsch.";
+      if (username === validUsername && password === validPassword) {
+        window.location.href = "geschuetzt/start.html";
+      } else {
+        document.getElementById("login-error").textContent = "Zugangsdaten falsch.";
+      }
       return false;
     }
-  }
-
-  function togglePassword() {
-    const pwField = document.getElementById("password");
-    pwField.type = pwField.type === "password" ? "text" : "password";
-  }
   </script>
+
 </body>
 </html>
