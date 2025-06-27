@@ -15,20 +15,27 @@
     }
     #viewer {
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top:    0;
+      left:   0;
+      right:  0;
+      /* unten Platz lassen für die 50px-Nav + Safe-Area */
       bottom: calc(50px + env(safe-area-inset-bottom));
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-}
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch; /* geschmeidiges Scrollen auf iOS */
+    }
     #nav {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: calc(50px + env(safe-area-inset-bottom));
-      display: flex; justify-content: center; align-items: center;
-      background: #f0f0f0;
-      padding-bottom: calc(50px + env(safe-area-inset-bottom)) !important;
-      box-sizing: border-box;
-      z-index: 1000;
+      position:       fixed;
+      bottom:         0;
+      left:           0;
+      right:          0;
+      height:         calc(50px + env(safe-area-inset-bottom));
+      display:        flex;
+      justify-content: center;
+      align-items:    center;
+      background:     #f0f0f0;
+      padding-bottom: env(safe-area-inset-bottom);
+      box-sizing:     border-box;
+      z-index:        1000;
     }
     button {
       margin: 0 10px; padding: 8px 16px; font-size: 14px;
