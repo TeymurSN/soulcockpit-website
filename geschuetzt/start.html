@@ -17,13 +17,12 @@
     #viewer {
       position: absolute;
       top: 0; left: 0; right: 0;
-      /* unten genug Platz für Nav + Safe-Area */
+      /* Platz für Nav + Safe-Area */
       bottom: calc(50px + env(safe-area-inset-bottom));
     }
     #nav {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      /* Nav-Höhe + Safe-Area unten auf iOS */
       height: calc(50px + env(safe-area-inset-bottom));
       display: flex; justify-content: center; align-items: center;
       background: #f0f0f0;
@@ -31,17 +30,17 @@
       box-sizing: border-box;
       z-index: 1000;
     }
-
-    #viewer,
-    #viewer * {
-      user-select: none !important;
-      -webkit-user-select: none !important;
-      -webkit-touch-callout: none !important;
-    }
-
     button {
       margin: 0 10px; padding: 8px 16px; font-size: 14px;
       cursor: pointer;
+    }
+
+    /* Globaler Copy-Guard für scrolled-doc und alle Browser */
+    html, body, #viewer, #viewer * {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -webkit-touch-callout: none !important;
+      -webkit-user-drag: none !important;
     }
   </style>
 </head>
@@ -55,6 +54,7 @@
     <button onclick="location.href='../index.html'">🔙 Zurück zur App</button>
   </div>
 
+  <!-- EPUB-Init und iframe-spezifischer Copy-Guard -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const book = ePub("SoulCockpit.epub");
@@ -64,6 +64,7 @@
         height: "100%"
       });
 
+      // einspaltiges Layout
       rendition.themes.override("body", {
         "column-count":         "1 !important",
         "-webkit-column-count": "1 !important",
@@ -75,22 +76,29 @@
 
       rendition.display();
 
+      // Navigation
       document.getElementById("prev").addEventListener("click", () => rendition.prev());
       document.getElementById("next").addEventListener("click", () => rendition.next());
       const tocHref = "index_split_002.html";
       document.getElementById("toc").addEventListener("click", () => rendition.display(tocHref));
 
+      // Globaler Kopierschutz im Haupt-DOM
       ["contextmenu","copy","cut","selectstart","dragstart"].forEach(evt =>
         document.addEventListener(evt, e => e.preventDefault())
       );
 
+      // bei jedem rendern im iFrame: Copy-Guard + einspaltiges Styling
       rendition.on("rendered", () => {
         const iframe = document.querySelector("#viewer iframe");
         if (!iframe?.contentDocument) return;
         const doc = iframe.contentDocument;
+
+        // Copy-Guard im iFrame
         ["copy","cut","contextmenu","selectstart","dragstart"].forEach(evt =>
           doc.addEventListener(evt, e => e.preventDefault())
         );
+
+        // Layout-Override im iFrame
         const style = doc.createElement("style");
         style.textContent = `
           html, body {
@@ -122,5 +130,17 @@
       });
     });
   </script>
+
+  <!-- Globaler Selection-Guard -->
+  <script>
+    document.addEventListener("selectionchange", () => {
+      if (window.getSelection) {
+        const sel = window.getSelection();
+        if (sel.rangeCount) sel.removeAllRanges();
+      }
+    });
+  </script>
+
 </body>
 </html>
+
