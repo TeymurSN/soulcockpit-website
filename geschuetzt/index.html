@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <base href="./geschuetzt">
   <title>Soul Cockpit – Online lesen</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -162,13 +161,13 @@
       `;
       doc.head.appendChild(style);
       
-      // Alle internen Links im iFrame abfangen und mit epub.js öffnen
+      // Alle internen Links - Inhaltsverzeichnis - im iFrame abfangen und mit epub.js öffnen
       doc.body.querySelectorAll("a[href]").forEach(a => {
         a.addEventListener("click", e => {
           e.preventDefault();
           const href = a.getAttribute("href");          
-          const resolved = book.resolve(href);
-          rendition.display(href);
+          const resolved = book.resolve(href);          
+          rendition.display(resolved);
         });
       });
 
