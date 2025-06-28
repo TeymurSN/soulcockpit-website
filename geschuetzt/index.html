@@ -166,7 +166,8 @@
       doc.body.querySelectorAll("a[href]").forEach(a => {
         a.addEventListener("click", e => {
           e.preventDefault();
-          const href = a.getAttribute("href");
+          const href = a.getAttribute("href");          
+          const resolved = book.resolve(href);
           rendition.display(href);
         });
       });
