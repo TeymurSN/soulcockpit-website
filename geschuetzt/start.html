@@ -3,8 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  +  <!-- relative URLs immer im geschuetzt-Ordner suchen -->
-+ <base href="https://www.soulcockpit.de/geschuetzt/">
   <title>Soul Cockpit – Online lesen</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -72,7 +70,7 @@
       "max-width":            "600px !important",
       "margin":               "0 auto !important",
       "padding":              "1em !important",
-      "padding-bottom": "calc(50px + env(safe-area-inset-bottom)) !important",
+      "padding-bottom":       "calc(50px + env(safe-area-inset-bottom)) !important",
       "user-select":          "none !important"
     });
 
@@ -170,7 +168,13 @@
         while (a && a.tagName !== "A") a = a.parentElement;
         if (a && a.getAttribute("href")) {
           e.preventDefault();
-          rendition.display(a.getAttribute("href"));
+          const href = a.getAttribute("href");
+
+          book.goto(href).then(location => {
+            rendition.display(location);
+          }).catch(err => {
+            console.warn("Fehler beim Navigieren zu:", href, err);
+         });
         }
       });
 
