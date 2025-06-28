@@ -87,15 +87,13 @@
 
     // Suche den TOC-Eintrag „Inhaltsverzeichnis“
     const tocEntry = book.navigation.toc.find(item => {
-      const label = item.label;
-      if (Array.isArray(label)) {
-        return label.some(l => l.trim().toLowerCase() === "inhaltsverzeichnis");
-      } else if (typeof label === "string") {
-        return label.trim().toLowerCase() === "inhaltsverzeichnis";
+      const lbl = item.label;
+      if (Array.isArray(lbl)) {
+        return lbl.some(l => l.trim().toLowerCase() === "inhaltsverzeichnis");
       }
-      return false;
+      return typeof lbl === "string" && lbl.trim().toLowerCase() === "inhaltsverzeichnis";
     });
-
+    
     // Bestimme den Ziel-Link oder fallback
     const tocTarget = tocEntry
       ? (tocEntry.cfi || tocEntry.href)
@@ -163,7 +161,8 @@
         }
       `;
       doc.head.appendChild(style);
-
+      
+      // Alle internen Links im iFrame abfangen und mit epub.js öffnen
       doc.body.querySelectorAll("a[href]").forEach(a => {
         a.addEventListener("click", e => {
           e.preventDefault();
