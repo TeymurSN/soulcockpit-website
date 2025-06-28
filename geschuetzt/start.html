@@ -163,19 +163,12 @@
       `;
       doc.head.appendChild(style);
 
-      doc.body.addEventListener("click", (e) => {
-        let a = e.target;
-        while (a && a.tagName !== "A") a = a.parentElement;
-        if (a && a.getAttribute("href")) {
+      doc.body.querySelectorAll("a[href]").forEach(a => {
+        a.addEventListener("click", e => {
           e.preventDefault();
           const href = a.getAttribute("href");
-
-          book.goto(href).then(location => {
-            rendition.display(location);
-          }).catch(err => {
-            console.warn("Fehler beim Navigieren zu:", href, err);
-         });
-        }
+          rendition.display(href);
+        });
       });
 
       // Auswahl zwangsweise zurücksetzen
