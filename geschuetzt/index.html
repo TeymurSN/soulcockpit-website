@@ -41,107 +41,20 @@
       margin: 0 10px; padding: 8px 16px; font-size: 14px;
       cursor: pointer;
     }
-    #debug {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      bottom: 70px;
-      background: rgba(0,0,0,0.9);
-      color: #00ff00;
-      padding: 10px;
-      font-size: 11px;
-      font-family: monospace;
-      z-index: 2000;
-      display: none;
-      overflow-y: auto;
-      border-radius: 5px;
-      border: 1px solid #333;
-    }
-    #debug-header {
-      position: sticky;
-      top: 0;
-      background: rgba(0,0,0,0.9);
-      padding: 5px 0;
-      border-bottom: 1px solid #333;
-      margin-bottom: 10px;
-    }
-    #debug-content {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-    #debug-clear {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 2px 6px;
-      font-size: 10px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
+
   </style>
 </head>
 <body>
 
-  <div id="debug">
-    <div id="debug-header">
-      📱 Mobile Debug Console
-      <button id="debug-clear">Clear</button>
-    </div>
-    <div id="debug-content"></div>
-  </div>
   <div id="viewer"></div>
   <div id="nav">
     <button id="prev">← Zurück</button>
     <button id="toc">📑 Inhaltsverzeichnis</button>
     <button id="next">Weiter →</button>
     <button onclick="location.href='../index.html'">🔙 Zurück zur App</button>
-    <button id="debug-toggle" style="font-size: 10px;">Debug</button>
   </div>
 
   <script>
-  let debugEnabled = false;
-  const debugDiv = document.getElementById('debug');
-  const debugContent = document.getElementById('debug-content');
-  
-  function debugLog(message) {
-    const timestamp = new Date().toLocaleTimeString();
-    const logMessage = `[${timestamp}] ${message}`;
-    console.log(logMessage);
-    
-    if (debugEnabled) {
-      debugContent.textContent += logMessage + '\n';
-      debugDiv.scrollTop = debugDiv.scrollHeight;
-    }
-  }
-
-  // Error handling für unbehandelte Fehler
-  window.addEventListener('error', (e) => {
-    debugLog(`❌ ERROR: ${e.message} in ${e.filename}:${e.lineno}`);
-  });
-
-  // Promise rejections abfangen
-  window.addEventListener('unhandledrejection', (e) => {
-    debugLog(`❌ UNHANDLED PROMISE: ${e.reason}`);
-  });
-
-  document.getElementById('debug-toggle').onclick = () => {
-    debugEnabled = !debugEnabled;
-    debugDiv.style.display = debugEnabled ? 'block' : 'none';
-    if (debugEnabled) {
-      debugContent.textContent = '📱 Mobile Debug Console aktiviert\n';
-      debugLog('Debug-Modus aktiviert');
-    }
-  };
-
-  document.getElementById('debug-clear').onclick = () => {
-    debugContent.textContent = '📱 Mobile Debug Console\n';
-    debugLog('Debug-Log geleert');
-  };
-
   document.addEventListener("DOMContentLoaded", async () => {
     const book = ePub("SoulCockpit.epub");
     const rendition = book.renderTo("viewer", {
@@ -177,8 +90,8 @@
       await new Promise(resolve => setTimeout(resolve, 2000)); // Längere Wartezeit
     }
     
-    debugLog("TOC geladen: " + JSON.stringify(book.navigation.toc.map(t => ({label: t.label, href: t.href}))));
-    debugLog("Spine Items: " + JSON.stringify(book.spine.spineItems.map(s => ({href: s.href, index: s.index}))));
+    console.log("TOC geladen:", book.navigation.toc);
+    console.log("Spine Items:", book.spine.spineItems);
 
     // Suche den TOC-Eintrag „Inhaltsverzeichnis"
     const tocEntry = book.navigation.toc.find(item => {
@@ -194,21 +107,21 @@
       ? (tocEntry.cfi || tocEntry.href)
       : "index_split_002.html";
 
-    debugLog("TOC Target: " + tocTarget);
+    console.log("TOC Target:", tocTarget);
 
     // Klick-Handler auf Inhaltsverzeichnis mit verbesserter Fehlerbehandlung
     document.getElementById("toc").onclick = async () => {
       try {
-        debugLog("Navigiere zu TOC: " + tocTarget);
+        console.log("Navigiere zu TOC:", tocTarget);
         await rendition.display(tocTarget);
       } catch (error) {
-        debugLog("Fehler beim Laden des Inhaltsverzeichnisses: " + error.message);
+        console.error("Fehler beim Laden des Inhaltsverzeichnisses:", error);
         // Fallback: Versuche direkt mit href
         if (tocEntry && tocEntry.href) {
           try {
             await rendition.display(tocEntry.href);
           } catch (fallbackError) {
-            debugLog("Auch Fallback fehlgeschlagen: " + fallbackError.message);
+            console.error("Auch Fallback fehlgeschlagen:", fallbackError);
             // Letzter Versuch: Gehe zur ersten Seite
             await rendition.display();
           }
@@ -222,20 +135,20 @@
 
     // Hilfsfunktion für Navigation
     async function navigateToHref(href) {
-      debugLog("Navigiere zu href: " + href);
+      console.log("Navigiere zu href:", href);
       
       if (!href) {
-        debugLog("Kein href angegeben");
+        console.log("Kein href angegeben");
         return false;
       }
 
       // Strategie 1: Direkte Navigation
       try {
         await rendition.display(href);
-        debugLog("Direkte Navigation erfolgreich");
+        console.log("Direkte Navigation erfolgreich");
         return true;
       } catch (error1) {
-        debugLog("Direkte Navigation fehlgeschlagen: " + error1.message);
+        console.log("Direkte Navigation fehlgeschlagen:", error1.message);
       }
 
       // Strategie 2: Navigation über Spine Index
@@ -254,48 +167,48 @@
         });
         
         if (spineIndex >= 0) {
-          debugLog("Gefundener Spine Index: " + spineIndex + " für " + cleanHref);
+          console.log("Gefundener Spine Index:", spineIndex, "für", cleanHref);
           await rendition.display(spineIndex);
-          debugLog("Navigation über Spine Index erfolgreich");
+          console.log("Navigation über Spine Index erfolgreich");
           return true;
         } else {
-          debugLog("Kein passender Spine Index gefunden für: " + cleanHref);
+          console.log("Kein passender Spine Index gefunden für:", cleanHref);
         }
       } catch (error2) {
-        debugLog("Navigation über Spine Index fehlgeschlagen: " + error2.message);
+        console.log("Navigation über Spine Index fehlgeschlagen:", error2.message);
       }
 
       // Strategie 3: Suche nach ähnlichen hrefs
       try {
         const basename = href.split('/').pop().split('#')[0];
-        debugLog("Suche nach Basename: " + basename);
+        console.log("Suche nach Basename:", basename);
         
         const matchingSpine = book.spine.spineItems.find(item => {
           return item.href.includes(basename) || basename.includes(item.href.split('/').pop());
         });
         
         if (matchingSpine) {
-          debugLog("Gefundenes ähnliches Spine Item: " + matchingSpine.href);
+          console.log("Gefundenes ähnliches Spine Item:", matchingSpine.href);
           await rendition.display(matchingSpine.index);
-          debugLog("Navigation über ähnliches Spine Item erfolgreich");
+          console.log("Navigation über ähnliches Spine Item erfolgreich");
           return true;
         }
       } catch (error3) {
-        debugLog("Navigation über ähnliches Spine Item fehlgeschlagen: " + error3.message);
+        console.log("Navigation über ähnliches Spine Item fehlgeschlagen:", error3.message);
       }
 
       // Strategie 4: Versuche book.resolve
       try {
         const resolved = book.resolve(href);
-        debugLog("Resolved href: " + resolved);
+        console.log("Resolved href:", resolved);
         await rendition.display(resolved);
-        debugLog("Navigation über book.resolve erfolgreich");
+        console.log("Navigation über book.resolve erfolgreich");
         return true;
       } catch (error4) {
-        debugLog("Navigation über book.resolve fehlgeschlagen: " + error4.message);
+        console.log("Navigation über book.resolve fehlgeschlagen:", error4.message);
       }
 
-      debugLog("Alle Navigationsstrategien fehlgeschlagen für: " + href);
+      console.log("Alle Navigationsstrategien fehlgeschlagen für:", href);
       return false;
     }
 
