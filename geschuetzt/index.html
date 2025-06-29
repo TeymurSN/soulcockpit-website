@@ -65,7 +65,7 @@
     // Einspaltiges Layout für alle Geräte
     rendition.themes.override("body", {
       "column-count":         "1 !important",
-      "-webkit-column-count": "1 !important",
+      "-webkit-column-count": "1 !important",    
       "column-gap":           "0 !important",
       "max-width":            "600px !important",
       "margin":               "0 auto !important",
@@ -86,10 +86,11 @@
     
     // Zusätzliche Wartezeit für Apple-Geräte
     if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Längere Wartezeit
     }
     
     console.log("TOC geladen:", book.navigation.toc);
+    console.log("Spine Items:", book.spine.spineItems);
 
     // Suche den TOC-Eintrag „Inhaltsverzeichnis"
     const tocEntry = book.navigation.toc.find(item => {
@@ -133,7 +134,9 @@
 
     // Bei jedem Kapitelwechsel härtere Regeln im iFrame
     rendition.on("rendered", () => {
-      // Warte kurz, damit der iFrame vollständig geladen ist
+      // Längere Wartezeit für Apple-Geräte
+      const waitTime = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) ? 500 : 100;
+      
       setTimeout(() => {
         const iframe = document.querySelector("#viewer iframe");
         if (!iframe?.contentDocument) return;
@@ -187,8 +190,7 @@
         `;
         doc.head.appendChild(style);
         
-        // Alle internen Links - Inhaltsverzeichnis - im iFrame abfangen und mit epub.js öffnen
-        // Verbesserte Link-Behandlung für Apple-Geräte
+        // Robuste Link-Behandlung speziell für Apple-Geräte
         doc.body.querySelectorAll("a[href]").forEach(a => {
           a.addEventListener("click", async (e) => {
             e.preventDefault();
@@ -198,39 +200,76 @@
             console.log("Link geklickt:", href);
             
             try {
-              // Mehrere Auflösungsversuche für bessere Apple-Kompatibilität
-              let target = href;
+              let target = null;
               
-              // Versuch 1: Direkte Verwendung des href
-              if (href.startsWith('#')) {
-                // Anchor-Link innerhalb der aktuellen Seite
-                target = href;
-              } else if (href.includes('#')) {
-                // Link zu anderer Seite mit Anchor
-                target = href;
+              // Strategie 1: Finde das entsprechende Spine-Item
+              if (href && !href.startsWith('#')) {
+                // Bereinige den href-Pfad
+                let cleanHref = href;
+                if (cleanHref.includes('#')) {
+                  cleanHref = cleanHref.split('#')[0];
+                }
+                
+                // Suche in spine Items
+                const spineItem = book.spine.spineItems.find(item => {
+                  return item.href === cleanHref || 
+                         item.href.endsWith(cleanHref) ||
+                         item.canonical === cleanHref ||
+                         item.url === cleanHref;
+                });
+                
+                if (spineItem) {
+                  target = spineItem.href;
+                  console.log("Gefundenes Spine Item:", spineItem);
+                } else {
+                  // Strategie 2: Versuche book.resolve
+                  try {
+                    target = book.resolve(href);
+                  } catch (resolveError) {
+                    console.warn("book.resolve fehlgeschlagen:", resolveError);
+                    target = href;
+                  }
+                }
               } else {
-                // Relativer oder absoluter Link
+                // Anchor-Link oder direkter href
+                target = href;
+              }
+              
+              console.log("Navigiere zu Target:", target);
+              
+              // Navigation mit mehreren Fallback-Versuchen
+              try {
+                await rendition.display(target);
+              } catch (navError) {
+                console.warn("Erste Navigation fehlgeschlagen:", navError);
+                
+                // Fallback 1: Versuche mit originalem href
                 try {
-                  target = book.resolve(href);
-                } catch (resolveError) {
-                  console.warn("book.resolve fehlgeschlagen, verwende direkten href:", resolveError);
-                  target = href;
+                  await rendition.display(href);
+                } catch (fallback1Error) {
+                  console.warn("Fallback 1 fehlgeschlagen:", fallback1Error);
+                  
+                  // Fallback 2: Versuche spine index zu finden
+                  const spineIndex = book.spine.spineItems.findIndex(item => 
+                    item.href.includes(href.split('#')[0]) || 
+                    href.includes(item.href)
+                  );
+                  
+                  if (spineIndex >= 0) {
+                    try {
+                      await rendition.display(spineIndex);
+                      console.log("Navigation über Spine Index erfolgreich:", spineIndex);
+                    } catch (spineError) {
+                      console.error("Alle Navigation-Versuche fehlgeschlagen:", spineError);
+                    }
+                  } else {
+                    console.error("Kein passendes Spine Item gefunden für:", href);
+                  }
                 }
               }
               
-              console.log("Navigiere zu:", target);
-              await rendition.display(target);
-              
             } catch (error) {
-              console.error("Fehler beim Navigieren:", error, "für href:", href);
-              
-              // Fallback-Strategien
-              try {
-                // Versuche mit originalem href
-                await rendition.display(href);
-              } catch (fallbackError) {
-                console.error("Auch Fallback fehlgeschlagen:", fallbackError);
-              }
+              console.error("Schwerer Navigations-Fehler:", error, "für href:", href);
             }
           });
         });
@@ -240,7 +279,7 @@
           const sel = doc.getSelection();
           if (sel && sel.rangeCount) sel.removeAllRanges();
         });
-      }, 100); // 100ms Verzögerung für vollständiges Laden
+      }, waitTime);
     });
   });
   </script>
