@@ -45,19 +45,54 @@
       position: fixed;
       top: 10px;
       left: 10px;
-      background: rgba(0,0,0,0.7);
-      color: white;
+      right: 10px;
+      bottom: 70px;
+      background: rgba(0,0,0,0.9);
+      color: #00ff00;
       padding: 10px;
-      font-size: 12px;
-      max-width: 300px;
+      font-size: 11px;
+      font-family: monospace;
       z-index: 2000;
       display: none;
+      overflow-y: auto;
+      border-radius: 5px;
+      border: 1px solid #333;
+    }
+    #debug-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,0.9);
+      padding: 5px 0;
+      border-bottom: 1px solid #333;
+      margin-bottom: 10px;
+    }
+    #debug-content {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    #debug-clear {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 2px 6px;
+      font-size: 10px;
+      border-radius: 3px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <div id="debug"></div>
+  <div id="debug">
+    <div id="debug-header">
+      📱 Mobile Debug Console
+      <button id="debug-clear">Clear</button>
+    </div>
+    <div id="debug-content"></div>
+  </div>
   <div id="viewer"></div>
   <div id="nav">
     <button id="prev">← Zurück</button>
@@ -70,19 +105,41 @@
   <script>
   let debugEnabled = false;
   const debugDiv = document.getElementById('debug');
+  const debugContent = document.getElementById('debug-content');
   
   function debugLog(message) {
-    console.log(message);
+    const timestamp = new Date().toLocaleTimeString();
+    const logMessage = `[${timestamp}] ${message}`;
+    console.log(logMessage);
+    
     if (debugEnabled) {
-      debugDiv.innerHTML += message + '<br>';
+      debugContent.textContent += logMessage + '\n';
       debugDiv.scrollTop = debugDiv.scrollHeight;
     }
   }
 
+  // Error handling für unbehandelte Fehler
+  window.addEventListener('error', (e) => {
+    debugLog(`❌ ERROR: ${e.message} in ${e.filename}:${e.lineno}`);
+  });
+
+  // Promise rejections abfangen
+  window.addEventListener('unhandledrejection', (e) => {
+    debugLog(`❌ UNHANDLED PROMISE: ${e.reason}`);
+  });
+
   document.getElementById('debug-toggle').onclick = () => {
     debugEnabled = !debugEnabled;
     debugDiv.style.display = debugEnabled ? 'block' : 'none';
-    if (debugEnabled) debugDiv.innerHTML = 'Debug aktiviert:<br>';
+    if (debugEnabled) {
+      debugContent.textContent = '📱 Mobile Debug Console aktiviert\n';
+      debugLog('Debug-Modus aktiviert');
+    }
+  };
+
+  document.getElementById('debug-clear').onclick = () => {
+    debugContent.textContent = '📱 Mobile Debug Console\n';
+    debugLog('Debug-Log geleert');
   };
 
   document.addEventListener("DOMContentLoaded", async () => {
