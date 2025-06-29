@@ -14,28 +14,28 @@
       font-family: sans-serif; user-select: none; background: #fff;
     }
     #viewer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+    position: absolute;
+      top:    0;
+      left:   0;
+      right:  0;
       /* unten Platz lassen für die 50px-Nav + Safe-Area */
       bottom: calc(50px + env(safe-area-inset-bottom));
       overflow-y: auto;
       -webkit-overflow-scrolling: touch; /* geschmeidiges Scrollen auf iOS */
     }
     #nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: calc(50px + env(safe-area-inset-bottom));
-      display: flex;
+      position:       fixed;
+      bottom:         0;
+      left:           0;
+      right:          0;
+      height:         calc(50px + env(safe-area-inset-bottom));
+      display:        flex;
       justify-content: center;
-      align-items: center;
-      background: #f0f0f0;
+      align-items:    center;
+      background:     #f0f0f0;
       padding-bottom: env(safe-area-inset-bottom);
-      box-sizing: border-box;
-      z-index: 1000;
+      box-sizing:     border-box;
+      z-index:        1000;
     }
     button {
       margin: 0 10px; padding: 8px 16px; font-size: 14px;
@@ -54,34 +54,24 @@
   </div>
 
   <script>
-  // Debug-Funktion für bessere Fehlerdiagnose
-  function debugLog(message) {
-    console.log(`[${new Date().toISOString()}] ${message}`);
-  }
-
-  // Apple-Gerät erkennen
-  function isAppleDevice() {
-    return /iPad|iPhone|iPod|Macintosh|Mac OS X/.test(navigator.userAgent);
-  }
-
   document.addEventListener("DOMContentLoaded", async () => {
     const book = ePub("SoulCockpit.epub");
     const rendition = book.renderTo("viewer", {
-      flow: "scrolled-doc",
-      width: "100%",
+      flow:   "scrolled-doc",
+      width:  "100%",
       height: "100%"
     });
 
     // Einspaltiges Layout für alle Geräte
     rendition.themes.override("body", {
-      "column-count": "1 !important",
-      "-webkit-column-count": "1 !important",    
-      "column-gap": "0 !important",
-      "max-width": "600px !important",
-      "margin": "0 auto !important",
-      "padding": "1em !important",
-      "padding-bottom": "calc(50px + env(safe-area-inset-bottom)) !important",
-      "user-select": "none !important"
+      "column-count":         "1 !important",
+      "-webkit-column-count": "1 !important",
+      "column-gap":           "0 !important",
+      "max-width":            "600px !important",
+      "margin":               "0 auto !important",
+      "padding":              "1em !important",
+      "padding-bottom":       "calc(50px + env(safe-area-inset-bottom)) !important",
+      "user-select":          "none !important"
     });
 
     await rendition.display();
@@ -95,186 +85,45 @@
     await book.loaded.spine;
     
     // Zusätzliche Wartezeit für Apple-Geräte
-    if (isAppleDevice()) {
-      debugLog("Apple-Gerät erkannt - verwende längere Wartezeit");
-      await new Promise(resolve => setTimeout(resolve, 3000)); // Noch längere Wartezeit
+    if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+      await new Promise(resolve => setTimeout(resolve, 1500));
     }
     
-    debugLog("TOC geladen: " + JSON.stringify(book.navigation.toc.map(item => ({ label: item.label, href: item.href }))));
-    debugLog("Spine Items: " + JSON.stringify(book.spine.spineItems.map(item => ({ href: item.href, index: item.index }))));
+    console.log("TOC geladen:", book.navigation.toc);
 
-    // Verbesserte TOC-Suche
+    // Suche den TOC-Eintrag „Inhaltsverzeichnis"
     const tocEntry = book.navigation.toc.find(item => {
       const lbl = item.label;
-      let labelText = "";
-      
       if (Array.isArray(lbl)) {
-        labelText = lbl.join(" ").toLowerCase();
-      } else if (typeof lbl === "string") {
-        labelText = lbl.toLowerCase();
+        return lbl.some(l => l.trim().toLowerCase() === "inhaltsverzeichnis");
       }
-      
-      return labelText.includes("inhaltsverzeichnis") || 
-             labelText.includes("inhalt") || 
-             labelText.includes("contents") ||
-             labelText.includes("toc");
+      return typeof lbl === "string" && lbl.trim().toLowerCase() === "inhaltsverzeichnis";
     });
     
-    debugLog("Gefundener TOC Entry: " + JSON.stringify(tocEntry));
+    // Bestimme den Ziel-Link oder fallback
+    const tocTarget = tocEntry
+      ? (tocEntry.cfi || tocEntry.href)
+      : "index_split_002.html";
 
-    // Verbesserte Hilfsfunktion für Navigation
-    async function navigateToHref(href) {
-      debugLog("=== Navigation Start für: " + href + " ===");
-      
-      if (!href) {
-        debugLog("Kein href angegeben");
-        return false;
-      }
+    console.log("TOC Target:", tocTarget);
 
-      // Apple-spezifische URL-Bereinigung
-      let cleanHref = href;
-      if (isAppleDevice()) {
-        // Entferne führende Schrägstriche und normalisiere den Pfad
-        cleanHref = href.replace(/^\/+/, '');
-        // Entferne Anker-Tags für die Spine-Suche
-        const baseHref = cleanHref.split('#')[0];
-        debugLog("Apple-Bereinigung - Original: " + href + ", Bereinigt: " + cleanHref + ", Base: " + baseHref);
-      }
-
-      // Strategie 1: Direkte Navigation mit Original-URL
-      try {
-        debugLog("Strategie 1: Direkte Navigation mit: " + href);
-        await rendition.display(href);
-        debugLog("✓ Direkte Navigation erfolgreich");
-        return true;
-      } catch (error1) {
-        debugLog("✗ Direkte Navigation fehlgeschlagen: " + error1.message);
-      }
-
-      // Strategie 2: Navigation mit bereinigter URL
-      if (cleanHref !== href) {
-        try {
-          debugLog("Strategie 2: Navigation mit bereinigter URL: " + cleanHref);
-          await rendition.display(cleanHref);
-          debugLog("✓ Navigation mit bereinigter URL erfolgreich");
-          return true;
-        } catch (error2) {
-          debugLog("✗ Navigation mit bereinigter URL fehlgeschlagen: " + error2.message);
-        }
-      }
-
-      // Strategie 3: Navigation über Spine Index mit verbesserter Suche
-      try {
-        const baseHref = cleanHref.split('#')[0];
-        debugLog("Strategie 3: Suche im Spine nach: " + baseHref);
-        
-        // Mehrere Suchstrategien für Spine
-        let spineIndex = -1;
-        const spineItems = book.spine.spineItems;
-        
-        // Exakte Übereinstimmung
-        spineIndex = spineItems.findIndex(item => item.href === baseHref);
-        if (spineIndex === -1) {
-          // Endswith-Übereinstimmung
-          spineIndex = spineItems.findIndex(item => item.href.endsWith(baseHref));
-        }
-        if (spineIndex === -1) {
-          // Enthält-Übereinstimmung
-          spineIndex = spineItems.findIndex(item => item.href.includes(baseHref) || baseHref.includes(item.href));
-        }
-        if (spineIndex === -1) {
-          // Dateiname-Übereinstimmung
-          const filename = baseHref.split('/').pop();
-          spineIndex = spineItems.findIndex(item => {
-            const itemFilename = item.href.split('/').pop();
-            return itemFilename === filename;
-          });
-        }
-        
-        if (spineIndex >= 0) {
-          debugLog("✓ Spine Index gefunden: " + spineIndex + " für Item: " + spineItems[spineIndex].href);
-          await rendition.display(spineIndex);
-          debugLog("✓ Navigation über Spine Index erfolgreich");
-          return true;
-        } else {
-          debugLog("✗ Kein passender Spine Index gefunden");
-          // Debug-Ausgabe aller Spine Items
-          spineItems.forEach((item, index) => {
-            debugLog("Spine[" + index + "]: " + item.href);
-          });
-        }
-      } catch (error3) {
-        debugLog("✗ Navigation über Spine Index fehlgeschlagen: " + error3.message);
-      }
-
-      // Strategie 4: CFI-basierte Navigation falls verfügbar
-      if (tocEntry && tocEntry.cfi) {
-        try {
-          debugLog("Strategie 4: Navigation über CFI: " + tocEntry.cfi);
-          await rendition.display(tocEntry.cfi);
-          debugLog("✓ Navigation über CFI erfolgreich");
-          return true;
-        } catch (error4) {
-          debugLog("✗ Navigation über CFI fehlgeschlagen: " + error4.message);
-        }
-      }
-
-      // Strategie 5: Fallback zur ersten Seite mit Warnung
-      try {
-        debugLog("Strategie 5: Fallback zur ersten Seite");
-        await rendition.display(0);
-        debugLog("✓ Fallback zur ersten Seite erfolgreich");
-        return true;
-      } catch (error5) {
-        debugLog("✗ Auch Fallback fehlgeschlagen: " + error5.message);
-      }
-
-      debugLog("=== Alle Navigationsstrategien fehlgeschlagen ===");
-      return false;
-    }
-
-    // Verbesserter TOC-Button Handler
+    // Klick-Handler auf Inhaltsverzeichnis mit verbesserter Fehlerbehandlung
     document.getElementById("toc").onclick = async () => {
-      debugLog("=== TOC Button geklickt ===");
-      
-      if (!tocEntry) {
-        debugLog("Kein TOC Entry gefunden - verwende Fallback");
-        try {
-          // Versuche verschiedene typische TOC-Dateien
-          const fallbackFiles = [
-            "index_split_002.html",
-            "toc.html", 
-            "contents.html",
-            "index.html"
-          ];
-          
-          for (const fallback of fallbackFiles) {
-            debugLog("Versuche Fallback: " + fallback);
-            const success = await navigateToHref(fallback);
-            if (success) {
-              debugLog("✓ Fallback erfolgreich: " + fallback);
-              return;
-            }
+      try {
+        console.log("Navigiere zu TOC:", tocTarget);
+        await rendition.display(tocTarget);
+      } catch (error) {
+        console.error("Fehler beim Laden des Inhaltsverzeichnisses:", error);
+        // Fallback: Versuche direkt mit href
+        if (tocEntry && tocEntry.href) {
+          try {
+            await rendition.display(tocEntry.href);
+          } catch (fallbackError) {
+            console.error("Auch Fallback fehlgeschlagen:", fallbackError);
+            // Letzter Versuch: Gehe zur ersten Seite
+            await rendition.display();
           }
-          
-          // Letzter Versuch: Gehe zur ersten Seite
-          await rendition.display(0);
-          debugLog("Fallback zur ersten Seite");
-        } catch (error) {
-          debugLog("Alle Fallbacks fehlgeschlagen: " + error.message);
-          alert("Inhaltsverzeichnis konnte nicht geladen werden");
         }
-        return;
-      }
-
-      // Verwende den gefundenen TOC Entry
-      const tocTarget = tocEntry.cfi || tocEntry.href;
-      debugLog("Navigiere zu TOC: " + tocTarget);
-      
-      const success = await navigateToHref(tocTarget);
-      if (!success) {
-        debugLog("TOC Navigation fehlgeschlagen");
-        alert("Inhaltsverzeichnis konnte nicht geladen werden");
       }
     };
 
@@ -282,18 +131,110 @@
     ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"]
       .forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
 
+    // Funktion zur besseren Link-Behandlung
+    function setupLinkHandling(doc) {
+      doc.body.querySelectorAll("a[href]").forEach(a => {
+        // Entferne alle existierenden Event-Listener
+        a.onclick = null;
+        a.removeAttribute('onclick');
+        
+        // Neuer robuster Event-Listener
+        a.addEventListener("click", async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          const href = a.getAttribute("href");
+          console.log("🔗 Link geklickt:", href);
+          
+          if (!href) return;
+          
+          try {
+            let target = href;
+            
+            // Verschiedene Strategien für verschiedene Link-Typen
+            if (href.startsWith('#')) {
+              // Anchor innerhalb der Seite
+              console.log("📍 Anchor-Link:", href);
+              target = href;
+            } else if (href.includes('.html')) {
+              // HTML-Datei Link
+              console.log("📄 HTML-Link:", href);
+              
+              // Versuche verschiedene Auflösungen
+              try {
+                // Strategie 1: book.resolve verwenden
+                target = book.resolve(href);
+                console.log("✅ Resolved mit book.resolve:", target);
+              } catch (resolveError) {
+                console.log("⚠️ book.resolve fehlgeschlagen, verwende direkten href");
+                target = href;
+              }
+            }
+            
+            console.log("🎯 Navigiere zu:", target);
+            
+            // Mehrere Navigationsversuche
+            let success = false;
+            
+            // Versuch 1: Direkter Display
+            try {
+              await rendition.display(target);
+              success = true;
+              console.log("✅ Navigation erfolgreich (Versuch 1)");
+            } catch (error1) {
+              console.log("❌ Versuch 1 fehlgeschlagen:", error1.message);
+              
+              // Versuch 2: Mit ursprünglichem href
+              try {
+                await rendition.display(href);
+                success = true;
+                console.log("✅ Navigation erfolgreich (Versuch 2)");
+              } catch (error2) {
+                console.log("❌ Versuch 2 fehlgeschlagen:", error2.message);
+                
+                // Versuch 3: Suche in spine nach ähnlichem Namen
+                try {
+                  const spineItem = book.spine.items.find(item => 
+                    item.href === href || item.href.includes(href.replace('.html', ''))
+                  );
+                  
+                  if (spineItem) {
+                    await rendition.display(spineItem.href);
+                    success = true;
+                    console.log("✅ Navigation erfolgreich (Versuch 3 - Spine)");
+                  }
+                } catch (error3) {
+                  console.log("❌ Versuch 3 fehlgeschlagen:", error3.message);
+                }
+              }
+            }
+            
+            if (!success) {
+              console.error("❌ Alle Navigationsversuche fehlgeschlagen für:", href);
+            }
+            
+          } catch (error) {
+            console.error("❌ Schwerwiegender Fehler beim Link-Handling:", error);
+          }
+        }, true); // useCapture = true für bessere Kompatibilität
+      });
+    }
+
     // Bei jedem Kapitelwechsel härtere Regeln im iFrame
     rendition.on("rendered", () => {
       // Längere Wartezeit für Apple-Geräte
-      const waitTime = isAppleDevice() ? 1000 : 200;
+      const waitTime = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) ? 300 : 100;
       
       setTimeout(() => {
         const iframe = document.querySelector("#viewer iframe");
         if (!iframe?.contentDocument) {
-          debugLog("Kein iframe contentDocument verfügbar");
+          console.log("⚠️ Kein iFrame contentDocument gefunden");
           return;
         }
+        
         const doc = iframe.contentDocument;
+        console.log("🔄 Kapitel gerendert, richte Links ein...");
 
         // alle selektions-/kopier-/touch-Events blocken
         ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"]
@@ -323,15 +264,16 @@
             height: auto !important;
             display: block;
             margin: 0 auto;
-            -webkit-user-drag: none !important;
-            -khtml-user-drag: none !important;
-            -moz-user-drag: none !important;
-            -o-user-drag: none !important;
             user-drag: none !important;
           }
           *::selection {
             background: transparent !important;
             color: inherit !important;
+          }
+          a {
+            color: #0066cc !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
           }
           @media only screen and (max-width: 480px) {
             html, body {
@@ -347,51 +289,18 @@
         `;
         doc.head.appendChild(style);
         
-        // Verbesserte Link-Behandlung mit Apple-spezifischen Korrekturen
-        doc.body.querySelectorAll("a[href]").forEach(a => {
-          a.addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            let href = a.getAttribute("href");
-            debugLog("Link geklickt: " + href);
-            
-            // Apple-spezifische URL-Korrekturen
-            if (isAppleDevice()) {
-              // Relative URLs normalisieren
-              if (href.startsWith('./')) {
-                href = href.substring(2);
-              }
-              if (href.startsWith('../')) {
-                // Übergeordnete Verzeichnisse handhaben
-                const parts = href.split('/');
-                href = parts[parts.length - 1]; // Nur Dateiname verwenden
-              }
-              debugLog("Apple-korrigierte URL: " + href);
-            }
-            
-            const success = await navigateToHref(href);
-            if (!success) {
-              debugLog("FEHLER: Navigation komplett fehlgeschlagen für: " + href);
-              // Verbesserte Fehlermeldung für Benutzer
-              if (isAppleDevice()) {
-                alert("Kapitel konnte nicht geladen werden. Dies ist ein bekanntes Problem auf Apple-Geräten. Versuchen Sie es über die Vor/Zurück-Buttons.");
-              } else {
-                alert("Kapitel konnte nicht geladen werden: " + href);
-              }
-            }
-          });
-        });
+        // Verbesserte Link-Behandlung einrichten
+        setupLinkHandling(doc);
 
         // Auswahl zwangsweise zurücksetzen
         doc.addEventListener("selectionchange", () => {
           const sel = doc.getSelection();
           if (sel && sel.rangeCount) sel.removeAllRanges();
         });
+        
+        console.log("✅ Link-Setup abgeschlossen");
       }, waitTime);
     });
-
-    debugLog("ePub Reader initialisiert - Apple-Gerät: " + isAppleDevice());
   });
   </script>
 
