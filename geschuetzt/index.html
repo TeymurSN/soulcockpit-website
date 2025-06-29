@@ -41,19 +41,50 @@
       margin: 0 10px; padding: 8px 16px; font-size: 14px;
       cursor: pointer;
     }
+    #debug {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 10px;
+      font-size: 12px;
+      max-width: 300px;
+      z-index: 2000;
+      display: none;
+    }
   </style>
 </head>
 <body>
 
+  <div id="debug"></div>
   <div id="viewer"></div>
   <div id="nav">
     <button id="prev">← Zurück</button>
     <button id="toc">📑 Inhaltsverzeichnis</button>
     <button id="next">Weiter →</button>
     <button onclick="location.href='../index.html'">🔙 Zurück zur App</button>
+    <button id="debug-toggle" style="font-size: 10px;">Debug</button>
   </div>
 
   <script>
+  let debugEnabled = false;
+  const debugDiv = document.getElementById('debug');
+  
+  function debugLog(message) {
+    console.log(message);
+    if (debugEnabled) {
+      debugDiv.innerHTML += message + '<br>';
+      debugDiv.scrollTop = debugDiv.scrollHeight;
+    }
+  }
+
+  document.getElementById('debug-toggle').onclick = () => {
+    debugEnabled = !debugEnabled;
+    debugDiv.style.display = debugEnabled ? 'block' : 'none';
+    if (debugEnabled) debugDiv.innerHTML = 'Debug aktiviert:<br>';
+  };
+
   document.addEventListener("DOMContentLoaded", async () => {
     const book = ePub("SoulCockpit.epub");
     const rendition = book.renderTo("viewer", {
@@ -89,8 +120,8 @@
       await new Promise(resolve => setTimeout(resolve, 2000)); // Längere Wartezeit
     }
     
-    console.log("TOC geladen:", book.navigation.toc);
-    console.log("Spine Items:", book.spine.spineItems);
+    debugLog("TOC geladen: " + JSON.stringify(book.navigation.toc.map(t => ({label: t.label, href: t.href}))));
+    debugLog("Spine Items: " + JSON.stringify(book.spine.spineItems.map(s => ({href: s.href, index: s.index}))));
 
     // Suche den TOC-Eintrag „Inhaltsverzeichnis"
     const tocEntry = book.navigation.toc.find(item => {
@@ -106,21 +137,21 @@
       ? (tocEntry.cfi || tocEntry.href)
       : "index_split_002.html";
 
-    console.log("TOC Target:", tocTarget);
+    debugLog("TOC Target: " + tocTarget);
 
     // Klick-Handler auf Inhaltsverzeichnis mit verbesserter Fehlerbehandlung
     document.getElementById("toc").onclick = async () => {
       try {
-        console.log("Navigiere zu TOC:", tocTarget);
+        debugLog("Navigiere zu TOC: " + tocTarget);
         await rendition.display(tocTarget);
       } catch (error) {
-        console.error("Fehler beim Laden des Inhaltsverzeichnisses:", error);
+        debugLog("Fehler beim Laden des Inhaltsverzeichnisses: " + error.message);
         // Fallback: Versuche direkt mit href
         if (tocEntry && tocEntry.href) {
           try {
             await rendition.display(tocEntry.href);
           } catch (fallbackError) {
-            console.error("Auch Fallback fehlgeschlagen:", fallbackError);
+            debugLog("Auch Fallback fehlgeschlagen: " + fallbackError.message);
             // Letzter Versuch: Gehe zur ersten Seite
             await rendition.display();
           }
@@ -131,6 +162,85 @@
     // Globaler Kopierschutz & Touch-Block
     ["contextmenu","copy","cut","selectstart","dragstart","touchstart","touchmove"]
       .forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
+
+    // Hilfsfunktion für Navigation
+    async function navigateToHref(href) {
+      debugLog("Navigiere zu href: " + href);
+      
+      if (!href) {
+        debugLog("Kein href angegeben");
+        return false;
+      }
+
+      // Strategie 1: Direkte Navigation
+      try {
+        await rendition.display(href);
+        debugLog("Direkte Navigation erfolgreich");
+        return true;
+      } catch (error1) {
+        debugLog("Direkte Navigation fehlgeschlagen: " + error1.message);
+      }
+
+      // Strategie 2: Navigation über Spine Index
+      try {
+        let cleanHref = href;
+        if (cleanHref.includes('#')) {
+          cleanHref = cleanHref.split('#')[0];
+        }
+        
+        // Finde den Spine Index
+        const spineIndex = book.spine.spineItems.findIndex(item => {
+          return item.href === cleanHref || 
+                 item.href.endsWith('/' + cleanHref) ||
+                 item.href.includes(cleanHref) ||
+                 cleanHref.includes(item.href);
+        });
+        
+        if (spineIndex >= 0) {
+          debugLog("Gefundener Spine Index: " + spineIndex + " für " + cleanHref);
+          await rendition.display(spineIndex);
+          debugLog("Navigation über Spine Index erfolgreich");
+          return true;
+        } else {
+          debugLog("Kein passender Spine Index gefunden für: " + cleanHref);
+        }
+      } catch (error2) {
+        debugLog("Navigation über Spine Index fehlgeschlagen: " + error2.message);
+      }
+
+      // Strategie 3: Suche nach ähnlichen hrefs
+      try {
+        const basename = href.split('/').pop().split('#')[0];
+        debugLog("Suche nach Basename: " + basename);
+        
+        const matchingSpine = book.spine.spineItems.find(item => {
+          return item.href.includes(basename) || basename.includes(item.href.split('/').pop());
+        });
+        
+        if (matchingSpine) {
+          debugLog("Gefundenes ähnliches Spine Item: " + matchingSpine.href);
+          await rendition.display(matchingSpine.index);
+          debugLog("Navigation über ähnliches Spine Item erfolgreich");
+          return true;
+        }
+      } catch (error3) {
+        debugLog("Navigation über ähnliches Spine Item fehlgeschlagen: " + error3.message);
+      }
+
+      // Strategie 4: Versuche book.resolve
+      try {
+        const resolved = book.resolve(href);
+        debugLog("Resolved href: " + resolved);
+        await rendition.display(resolved);
+        debugLog("Navigation über book.resolve erfolgreich");
+        return true;
+      } catch (error4) {
+        debugLog("Navigation über book.resolve fehlgeschlagen: " + error4.message);
+      }
+
+      debugLog("Alle Navigationsstrategien fehlgeschlagen für: " + href);
+      return false;
+    }
 
     // Bei jedem Kapitelwechsel härtere Regeln im iFrame
     rendition.on("rendered", () => {
@@ -190,86 +300,19 @@
         `;
         doc.head.appendChild(style);
         
-        // Robuste Link-Behandlung speziell für Apple-Geräte
+        // Verbesserte Link-Behandlung
         doc.body.querySelectorAll("a[href]").forEach(a => {
           a.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
             
             const href = a.getAttribute("href");
-            console.log("Link geklickt:", href);
+            debugLog("Link geklickt: " + href);
             
-            try {
-              let target = null;
-              
-              // Strategie 1: Finde das entsprechende Spine-Item
-              if (href && !href.startsWith('#')) {
-                // Bereinige den href-Pfad
-                let cleanHref = href;
-                if (cleanHref.includes('#')) {
-                  cleanHref = cleanHref.split('#')[0];
-                }
-                
-                // Suche in spine Items
-                const spineItem = book.spine.spineItems.find(item => {
-                  return item.href === cleanHref || 
-                         item.href.endsWith(cleanHref) ||
-                         item.canonical === cleanHref ||
-                         item.url === cleanHref;
-                });
-                
-                if (spineItem) {
-                  target = spineItem.href;
-                  console.log("Gefundenes Spine Item:", spineItem);
-                } else {
-                  // Strategie 2: Versuche book.resolve
-                  try {
-                    target = book.resolve(href);
-                  } catch (resolveError) {
-                    console.warn("book.resolve fehlgeschlagen:", resolveError);
-                    target = href;
-                  }
-                }
-              } else {
-                // Anchor-Link oder direkter href
-                target = href;
-              }
-              
-              console.log("Navigiere zu Target:", target);
-              
-              // Navigation mit mehreren Fallback-Versuchen
-              try {
-                await rendition.display(target);
-              } catch (navError) {
-                console.warn("Erste Navigation fehlgeschlagen:", navError);
-                
-                // Fallback 1: Versuche mit originalem href
-                try {
-                  await rendition.display(href);
-                } catch (fallback1Error) {
-                  console.warn("Fallback 1 fehlgeschlagen:", fallback1Error);
-                  
-                  // Fallback 2: Versuche spine index zu finden
-                  const spineIndex = book.spine.spineItems.findIndex(item => 
-                    item.href.includes(href.split('#')[0]) || 
-                    href.includes(item.href)
-                  );
-                  
-                  if (spineIndex >= 0) {
-                    try {
-                      await rendition.display(spineIndex);
-                      console.log("Navigation über Spine Index erfolgreich:", spineIndex);
-                    } catch (spineError) {
-                      console.error("Alle Navigation-Versuche fehlgeschlagen:", spineError);
-                    }
-                  } else {
-                    console.error("Kein passendes Spine Item gefunden für:", href);
-                  }
-                }
-              }
-              
-            } catch (error) {
-              console.error("Schwerer Navigations-Fehler:", error, "für href:", href);
+            const success = await navigateToHref(href);
+            if (!success) {
+              debugLog("FEHLER: Navigation komplett fehlgeschlagen für: " + href);
+              alert("Kapitel konnte nicht geladen werden: " + href);
             }
           });
         });
